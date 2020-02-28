@@ -38,18 +38,6 @@ public class MainActivity extends AppCompatActivity implements CallbackServer
                 startActivity(intent);
             }
         });
-
-        // Déclaration
-//        requestPhoneme = new RequestPhoneme(this, MainActivity.this);
-//        requestPhrase = new RequestPhrase(this, MainActivity.this);
-//
-//        // Remplissage des paramètres a envoyé
-//        HashMap<String, String> listeParametre = new HashMap<>();
-//        listeParametre.put("wav", "base64wavString");
-//        listeParametre.put("phoneme", "base64TxtFile ou directement le phoneme");
-//
-//        // Envoie au serveur une requête sur les phonemes
-//        requestPhoneme.sendHttpsRequest(listeParametre);
     }
 
     @Override
