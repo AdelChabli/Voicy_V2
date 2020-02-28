@@ -3,8 +3,6 @@ package com.example.voicy_v2.model;
 import android.os.Environment;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class DirectoryManager
 {
@@ -76,5 +74,8 @@ public class DirectoryManager
                     file.delete();
             }
         }
+    }
+    public File getFileTest(String sFile) {
+        return new File(OUTPUT_DIRECTORY+"/"+sFile);
     }
 }

@@ -1,25 +1,24 @@
 package com.example.voicy_v2.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.voicy_v2.R;
 import com.example.voicy_v2.interfaces.CallbackServer;
 import com.example.voicy_v2.model.DirectoryManager;
-import com.example.voicy_v2.model.RequestPhoneme;
-import com.example.voicy_v2.model.RequestPhrase;
 import com.example.voicy_v2.model.ServerRequest;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity extends AppCompatActivity implements CallbackServer
 {
     private ServerRequest requestPhoneme, requestPhrase;
+
+    private Button btn_phoneme;
+    private Button btn_sentence;
+    private Button btn_rslt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -29,17 +28,28 @@ public class MainActivity extends AppCompatActivity implements CallbackServer
 
         DirectoryManager.getInstance().initProject();
 
+        btn_phoneme = findViewById(R.id.btn_phoneme);
+        btn_sentence = findViewById(R.id.btn_sentence);
+        btn_rslt = findViewById(R.id.btn_rslt);
+
+        btn_phoneme.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), PhonemeActivity.class);
+                startActivity(intent);
+            }
+        });
+
         // Déclaration
-        requestPhoneme = new RequestPhoneme(this, MainActivity.this);
-        requestPhrase = new RequestPhrase(this, MainActivity.this);
-
-        // Remplissage des paramètres a envoyé
-        HashMap<String, String> listeParametre = new HashMap<>();
-        listeParametre.put("wav", "base64wavString");
-        listeParametre.put("phoneme", "base64TxtFile ou directement le phoneme");
-
-        // Envoie au serveur une requête sur les phonemes
-        requestPhoneme.sendHttpsRequest(listeParametre);
+//        requestPhoneme = new RequestPhoneme(this, MainActivity.this);
+//        requestPhrase = new RequestPhrase(this, MainActivity.this);
+//
+//        // Remplissage des paramètres a envoyé
+//        HashMap<String, String> listeParametre = new HashMap<>();
+//        listeParametre.put("wav", "base64wavString");
+//        listeParametre.put("phoneme", "base64TxtFile ou directement le phoneme");
+//
+//        // Envoie au serveur une requête sur les phonemes
+//        requestPhoneme.sendHttpsRequest(listeParametre);
     }
 
     @Override
