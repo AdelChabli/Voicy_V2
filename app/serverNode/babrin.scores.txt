@@ -1,0 +1,12 @@
+Average for this specific phone - [pause]0=> (sum(logVraisForce-logVraisDAP))-5.41666666666667 (logVraisForce) -29.7 (logVraisNonForce) -24.3
+Average for this specific phone - [bb]1=> (sum(logVraisForce-logVraisDAP))-1.52933333333333 (logVraisForce) 0.0877777777777775 (logVraisNonForce) 1.61388888888889
+Average for this specific phone - [aa]2=> (sum(logVraisForce-logVraisDAP))-2.901 (logVraisForce) 6.9002 (logVraisNonForce) 9.8101
+Average for this specific phone - [bb]3=> (sum(logVraisForce-logVraisDAP))-2.01571428571429 (logVraisForce) -5.79028571428571 (logVraisNonForce) -3.77
+Average for this specific phone - [rr]4=> (sum(logVraisForce-logVraisDAP))-6.7 (logVraisForce) -8.015 (logVraisNonForce) -1.313
+Average for this specific phone - [in]5=> (sum(logVraisForce-logVraisDAP))-2.02813636363636 (logVraisForce) 7.12245454545454 (logVraisNonForce) 9.14681818181818
+Average for this specific phone - [pause]6=> (sum(logVraisForce-logVraisDAP))-1.05 (logVraisForce) -1.13 (logVraisNonForce) -0.0883
+Average per phone - [aa] (sum(logVraisForce-logVraisDAP)) => -2.901 / 1 (logVraisForce) 6.9002 (logVraisNonForce)  9.8101
+Average per phone - [bb] (sum(logVraisForce-logVraisDAP)) => -1.77252380952381 / 2 (logVraisForce) -2.85125396825397 (logVraisNonForce)  -1.07805555555556
+Average per phone - [in] (sum(logVraisForce-logVraisDAP)) => -2.02813636363636 / 1 (logVraisForce) 7.12245454545454 (logVraisNonForce)  9.14681818181818
+Average per phone - [rr] (sum(logVraisForce-logVraisDAP)) => -6.7 / 1 (logVraisForce) -8.015 (logVraisNonForce)  -1.313
+Global Score for mds/babrin.fcm : (sum(logVraisForce-logVraisDAP)) -3.35041504329004 (logVraisForce) 0.789100144300144 (logVraisNonForce) 4.14146565656566 

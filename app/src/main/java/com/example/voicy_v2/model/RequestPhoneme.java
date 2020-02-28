@@ -1,5 +1,6 @@
 package com.example.voicy_v2.model;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
@@ -47,7 +48,7 @@ public class RequestPhoneme extends ServerRequest
     //private static final String URL_REQUEST = "https://pedago.univ-avignon.fr:3211";
     private static final String URL_REQUEST = "https://192.168.42.130:3211";
     private static final int ID_SERVER = 0;
-    private static final int TIMEOUT = 30000;
+    private static final int TIMEOUT = 10000;
     public RequestPhoneme(Context context, CallbackServer callbackServer)
     {
         super(context, callbackServer);
@@ -59,10 +60,12 @@ public class RequestPhoneme extends ServerRequest
     public void sendHttpsRequest(final HashMap<String, String> param)
     {
 
+        final ProgressDialog dialog = ProgressDialog.show(context, null, "Traitement de la parole en cours");
+
         RequestQueue requestQueue;
 
         // Instantiate the cache
-        Cache cache = new DiskBasedCache(context.getCacheDir(), 1024 * 1024); // 1MB cap
+        Cache cache = new DiskBasedCache(context.getCacheDir(), 1024 * 1024); // 100MB cap
 
         HurlStack hurlStack = new HurlStack() {
             @Override
@@ -91,11 +94,13 @@ public class RequestPhoneme extends ServerRequest
             @Override
             public void onResponse(String response) {
                 Log.d("APP", response);
+                dialog.dismiss();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("APP", "Error = " +error);
+                dialog.dismiss();
                 callback.executeAfterResponseServer("Indisponibilité du serveur", ID_SERVER);
             }
         }){
