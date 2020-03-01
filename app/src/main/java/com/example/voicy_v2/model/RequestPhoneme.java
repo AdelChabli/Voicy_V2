@@ -46,7 +46,7 @@ import javax.net.ssl.X509TrustManager;
 public class RequestPhoneme extends ServerRequest
 {
     //private static final String URL_REQUEST = "https://pedago.univ-avignon.fr:3211";
-    private static final String URL_REQUEST = "https://192.168.42.130:3211";
+    private static final String URL_REQUEST = "https://192.168.1.24:3211";
     private static final int ID_SERVER = 0;
     private static final int TIMEOUT = 10000;
     public RequestPhoneme(Context context, CallbackServer callbackServer)

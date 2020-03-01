@@ -1,4 +1,6 @@
 const fs = require('fs');
+// const Promise = require('promise');
+const readline = require('readline');
 const https = require('https');
 const bodyParser = require('body-parser')
 const express = require('express');
@@ -24,22 +26,13 @@ app.post('/', function(req,res) {
     console.log(tabPho);
 
 
-	sleep(5000, function() {
-	   console.log("Wake up !")
+	// sleep(5000, function() {
+	//    console.log("Wake up !")
+	// });
+
+	formatData("babrin.scores.txt").then(function(response){
+		res.send(response);	
 	});
-
-
-
-	fs.readFile('babrin.scores.txt', function (err , data) {
-		if(err) throw err;
-
-		const content = data;
-		console.log(content.toString('UTF-8'));
-	});
-    res.send('Fini\n')
-
-
-
 
     res.on('finish', function() {
 		removeFile(tabPho);
@@ -65,9 +58,6 @@ server.listen(3211, () => {
 function removeFile(tabPho) {
 	tabPho.forEach(element => fs.unlinkSync(element+".wav"))
 }
-function print(param) {
-	console.log(param);
-}
 
 function sleep(time, callback) {
     var stop = new Date().getTime();
@@ -75,6 +65,68 @@ function sleep(time, callback) {
         ;
     }
     callback();
+}
+function formatData(namefile) {
+	return new Promise(resolve => {
+		const readInterface = readline.createInterface({
+		    input: fs.createReadStream(namefile),
+			  output: process.stdout,
+			  terminal: false
+		});
+
+		console.log(namefile)
+
+		var phoneme = new Object();
+		phoneme.name = namefile.substring(0, namefile.indexOf("."));
+		phoneme.phoneAll = [];
+		phoneme.global = new Object();
+
+		var countPhone = 0;
+
+		readInterface.on('line',function(line) {
+			
+			if(line.includes("pause")) return;
+
+			//console.log(line);
+
+		    if(line.includes("Average for")) {
+
+		    	let phoneText = line.substring(line.indexOf('[')+1, line.indexOf(']')); 
+
+		    	phoneme.phoneAll[countPhone] = new Object();
+		    	phoneme.phoneAll[countPhone].phone = phoneText;
+
+				let index = line.indexOf("(logVraisForce)");
+		    	let subLine = line.substring(index+16);
+		    	let ScoreContraint = subLine.substring(0, subLine.indexOf(" "));
+		    	let ScoreNonContraint = subLine.substring(subLine.indexOf(" ")+20)
+
+		    	phoneme.phoneAll[countPhone].AC = ScoreContraint;
+		    	phoneme.phoneAll[countPhone].NC = ScoreNonContraint;
+
+		    	countPhone++;
+		    	// console.log("Phone ==> Score contraint : "+ ScoreContraint+ " || Score non contraint : "+ ScoreNonContraint );
+
+		    }
+		    if(line.includes("Global")) {
+
+		    	let index = line.indexOf("(logVraisForce)");
+		    	let subLine = line.substring(index+16);
+		    	let ScoreContraint = subLine.substring(0, subLine.indexOf(" "));
+		    	let ScoreNonContraint = subLine.substring(subLine.indexOf(" ")+20)
+
+		    	phoneme.global.scoreContraint = ScoreContraint;
+		    	phoneme.global.scoreNonContraint = ScoreNonContraint;
+
+		    	// console.log("Global ===> Score contraint : "+ ScoreContraint +" || Score non contraint : "+ ScoreNonContraint);
+		    }
+		});
+		readInterface.on('close', () => {
+			resolve(phoneme);
+		})
+	});
+
+
 }
 
 
