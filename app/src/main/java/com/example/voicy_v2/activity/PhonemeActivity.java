@@ -37,7 +37,7 @@ public class PhonemeActivity extends AppCompatActivity implements CallbackServer
 
                 HashMap<String, String> listeParametre = new HashMap<>();
                 listeParametre.put("wav", Encode.getEncode(DirectoryManager.getInstance().getFileTest("#babrin.wav")));
-                listeParametre.put("phoneme", Encode.getEncode("Coucou C'est moi"));
+                listeParametre.put("phoneme", Encode.getEncode("babrin"));
 
                 // Envoie au serveur une requête sur les phonemes
                 requestPhoneme.sendHttpsRequest(listeParametre);

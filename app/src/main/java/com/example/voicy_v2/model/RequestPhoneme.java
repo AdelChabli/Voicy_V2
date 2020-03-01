@@ -19,6 +19,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.voicy_v2.R;
 import com.example.voicy_v2.interfaces.CallbackServer;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -46,7 +49,7 @@ import javax.net.ssl.X509TrustManager;
 public class RequestPhoneme extends ServerRequest
 {
     //private static final String URL_REQUEST = "https://pedago.univ-avignon.fr:3211";
-    private static final String URL_REQUEST = "https://192.168.1.24:3211";
+    private static final String URL_REQUEST = "https://192.168.42.180:3211";
     private static final int ID_SERVER = 0;
     private static final int TIMEOUT = 10000;
     public RequestPhoneme(Context context, CallbackServer callbackServer)
@@ -93,7 +96,16 @@ public class RequestPhoneme extends ServerRequest
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_REQUEST, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("APP", response);
+                JSONObject res = null;
+                try {
+                    res = new JSONObject(response);
+                    Storage.store(res,Storage.PHONE);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Log.d("APP", res.toString());
                 dialog.dismiss();
             }
         }, new Response.ErrorListener() {
