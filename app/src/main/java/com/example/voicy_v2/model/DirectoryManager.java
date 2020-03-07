@@ -21,14 +21,16 @@ public class DirectoryManager
 
     // Arguments
     public static final String OUTPUT_DIRECTORY = Environment.getExternalStorageDirectory() + "/Voicy";
-    public static final String OUTPUT_PHONE= Environment.getExternalStorageDirectory() + "/Voicy/Phonemes";
+    public static final String OUTPUT_PHONE= Environment.getExternalStorageDirectory() + "/Voicy/Logatomes";
     public static final String OUTPUT_SENTENCE = Environment.getExternalStorageDirectory() + "/Voicy/Phrases";
+    public static final String OUTPUT_RESULTAT = Environment.getExternalStorageDirectory() + "/Voicy/Resultats";
 
     public void initProject()
     {
         createInternalDirectory();
-        createFolderInAppFolder("Phonemes");
+        createFolderInAppFolder("Logatomes");
         createFolderInAppFolder("Phrases");
+        createFolderInAppFolder("Resultats");
     }
 
     // Créer le dossier de notre application sur l'appareil Android

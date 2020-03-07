@@ -10,13 +10,14 @@
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="false"
-        android:largeHeap="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.PhonemeActivity"></activity>
+        <activity android:name=".activity.ExerciceActivity"></activity>
+        <activity android:name=".activity.PhonemeActivity" />
         <activity android:name=".activity.PermissionCheckerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

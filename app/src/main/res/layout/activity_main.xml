@@ -25,7 +25,7 @@
         style="@style/Widget.AppCompat.Button"
         android:layout_width="150dp"
         android:layout_height="100dp"
-        android:text="Phonème"
+        android:text="Logatome"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
