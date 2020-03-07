@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements CallbackServer
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExerciceActivity.class);
                 intent.putExtra("type", "logatome");
-                startActivity(intent);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -55,19 +55,42 @@ public class MainActivity extends AppCompatActivity implements CallbackServer
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExerciceActivity.class);
                 intent.putExtra("type", "phrase");
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
 
         btn_rslt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ResultatActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 2);
             }
         });
-
-
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 0) {
+            if (resultCode == 0) {
+
+            }
+        }
+
+        if(requestCode == 1) {
+            if (resultCode == 0) {
+
+            }
+        }
+
+        if(requestCode == 2) {
+            if (resultCode == 0) {
+
+            }
+        }
+    }
+
 
     @Override
     public void executeAfterResponseServer(String response, int idServer)

@@ -24,23 +24,21 @@ public class Recorder
     private int bufferSize = 0;
     private Thread recordingThread = null;
     private boolean isRecording = false;
-    private String saveDirectory;
-    private String nameWav;
+    private String directoryToRecord;
 
 
-    public Recorder(Context cont, String directory, String namewav)
+    public Recorder(Context cont, String directory)
     {
         bufferSize = AudioRecord.getMinBufferSize(SAMPLERATE, CHANNEL, ENCODING) * 3;
 
         audioData = new short[bufferSize];
-        saveDirectory = directory;
 
-        nameWav = namewav;
+        directoryToRecord = directory;
     }
 
     private void deleteTempFile()
     {
-        File tempFile = new File(saveDirectory + "/temp.wav");
+        File tempFile = new File(directoryToRecord + "/temp.raw");
 
         if (tempFile.exists())
             tempFile.delete();
@@ -75,7 +73,15 @@ public class Recorder
 
         try
         {
-            os = new FileOutputStream(saveDirectory + "/temp.wav");
+            /*
+            File f = new File(directoryToRecord + "/temp.raw");
+
+            if(!f.exists())
+                f.createNewFile();
+
+             */
+
+            os = new FileOutputStream(directoryToRecord + "/temp.raw");
         }
         catch (FileNotFoundException e)
         {
@@ -114,7 +120,7 @@ public class Recorder
         }
     }
 
-    public void stopRecording()
+    public void stopRecording(String nameWav)
     {
         if(null != recorder)
         {
@@ -129,7 +135,7 @@ public class Recorder
             recordingThread = null;
         }
 
-        convertTempAudioToWavAudio(saveDirectory + "/temp.wav", saveDirectory + "/" + nameWav);
+        convertTempAudioToWavAudio(directoryToRecord + "/temp.raw", directoryToRecord + "/" + nameWav);
         deleteTempFile();
     }
 

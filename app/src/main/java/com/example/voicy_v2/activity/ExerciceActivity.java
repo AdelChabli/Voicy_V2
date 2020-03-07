@@ -1,38 +1,215 @@
 package com.example.voicy_v2.activity;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.voicy_v2.R;
+import com.example.voicy_v2.model.DirectoryManager;
+import com.example.voicy_v2.model.Exercice;
+import com.example.voicy_v2.model.ExerciceLogatome;
+import com.example.voicy_v2.model.Mot;
+import com.example.voicy_v2.model.Recorder;
+
+import java.io.File;
+import java.io.IOException;
 
 public class ExerciceActivity extends AppCompatActivity
 {
     private Toolbar toolbar;
     private Button btnAnnuler;
+    private ImageButton btnNext, btnEcouter, btnRecord;
+    private TextView lePrompteur, iterationEnCours;
+    private Exercice exercice;
+    private String typeExercice;
+    private int maxIteration;
+    private Mot motActuel;
+    private boolean isRecording = false, isListening = false;
+    private Recorder record;
+    MediaPlayer mp;
 
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercice);
 
+        // Initialise le prompteur
+        lePrompteur = findViewById(R.id.prompteur);
+        iterationEnCours = findViewById(R.id.txtNumElement);
+
+        // Permet de récuperer le paramètre envoyer par l'activité précédente
         Bundle param = getIntent().getExtras();
+        typeExercice = param.getString("type");
 
-        configOfToolbar(param.getString("type"));
+        // Permet de configurer la toolbar pour cette activité
+        configOfToolbar(typeExercice);
 
+        // Initialise les boutons et les configures
+        initAllButton();
+
+        // TODO Pour l'instant, on peut lancer mini 3 logatomes (à rendre modulable)
+        maxIteration = 2;
+
+        // Lance l'exercice
+        lancerExercice();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void lancerExercice()
+    {
+        if(typeExercice.equals("logatome"))
+        {
+            exercice = new ExerciceLogatome(maxIteration, this);
+
+            record = new Recorder(this, exercice.getDirectoryPath());
+
+            lireLogatome();
+        }
+        else
+        {
+
+        }
+    }
+
+    public void lireLogatome()
+    {
+        if(!exercice.isExerciceFinish())
+        {
+            Log.d("logATOM", "Exercice non terminer -> " + exercice.getIterationSurMax());
+
+            // Recupère le mot actuel
+            motActuel = exercice.getActuelMot();
+
+            lePrompteur.setText(motActuel.getMot());
+            iterationEnCours.setText(exercice.getIterationSurMax());
+        }
+        else
+        {
+            Log.d("logATOM", "Exercice Terminer");
+
+            Intent intent = new Intent(ExerciceActivity.this, ResultatActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    public void initAllButton()
+    {
         btnAnnuler = findViewById(R.id.buttonAnnuler);
+        btnEcouter = findViewById(R.id.buttonEcouter);
+        btnNext = findViewById(R.id.buttonNext);
+        btnRecord = findViewById(R.id.buttonRecord);
+
+        setVisibiliteBouton(false);
 
         btnAnnuler.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 quitterPopup();
             }
         });
+
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                exercice.nextIteration();
+                setVisibiliteBouton(false);
+                lireLogatome();
+            }
+        });
+
+        btnRecord.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(!isRecording)
+                {
+                    btnRecord.setImageResource(R.drawable.stop);
+                    isRecording = true;
+                    record.startRecording();
+                }
+                else
+                {
+                    btnRecord.setImageResource(R.drawable.mic_48dp);
+                    isRecording = false;
+                    record.stopRecording(exercice.getActuelMot().getMot()+".wav");
+                    setVisibiliteBouton(true);
+                }
+            }
+        });
+
+        btnEcouter.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (mp == null) {
+                    try {
+                        mp = new MediaPlayer();
+                        mp.setDataSource(exercice.getDirectoryPath() + "/" + exercice.getActuelMot().getMot() + ".wav");
+                        mp.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        public void onCompletion(MediaPlayer mp)
+                        {
+                            isListening = false;
+                            btnEcouter.setImageResource(R.drawable.ic_play_arrow_white_32dp);
+                            stopMediaPlayer();
+                        }
+                    });
+                }
+
+                if (!isListening) {
+                    btnEcouter.setImageResource(R.drawable.ic_stop_white_32dp);
+                    isListening = true;
+                    mp.start();
+                } else
+                {
+                    btnEcouter.setImageResource(R.drawable.ic_play_arrow_white_32dp);
+                    isListening = false;
+                    stopMediaPlayer();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        stopMediaPlayer();
+        super.onDestroy();
+    }
+
+
+    public void stopMediaPlayer() {
+        if (mp != null) {
+            mp.release();
+            mp = null;
+        }
+    }
+
+    public void setVisibiliteBouton(boolean isVisible)
+    {
+        if(isVisible)
+        {
+            btnEcouter.setVisibility(View.VISIBLE);
+            btnNext.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            btnEcouter.setVisibility(View.GONE);
+            btnNext.setVisibility(View.GONE);
+        }
     }
 
     // ----------------------- SECTION TOOLBAR ET ACTION LORS DES BACK / CLIQUE ITEM MENU -----------------------------
@@ -41,17 +218,21 @@ public class ExerciceActivity extends AppCompatActivity
     {
         new cn.pedant.SweetAlert.SweetAlertDialog(this, cn.pedant.SweetAlert.SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Êtes-vous sûr ?")
-                .setContentText("Vous aller annuler l'exercice en cours")
-                .setConfirmText("Continuer")
+                .setContentText("Voulez-vous vraiment quitter l'exercice en cours ?")
+                .setConfirmText("Oui")
                 .setConfirmClickListener(new cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(cn.pedant.SweetAlert.SweetAlertDialog sDialog)
                     {
+                        sDialog.dismissWithAnimation();
+                        DirectoryManager.getInstance().rmdirFolder(exercice.getDirectoryPath());
+                        Intent intent = new Intent(ExerciceActivity.this, MainActivity.class);
+                        setResult(0, intent);
                         finish();
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
                 })
-                .setCancelButton("Annuler", new cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener() {
+                .setCancelButton("Non", new cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(cn.pedant.SweetAlert.SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
@@ -90,8 +271,9 @@ public class ExerciceActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public void onBackPressed()
+    {
+        moveTaskToBack(false);
         quitterPopup();
     }
 

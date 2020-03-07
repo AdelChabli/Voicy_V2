@@ -33,6 +33,13 @@ public class DirectoryManager
         createFolderInAppFolder("Resultats");
     }
 
+    public void createFolder(String path)
+    {
+        File file = new File(path);
+        if (!file.exists())
+            file.mkdir();
+    }
+
     // Créer le dossier de notre application sur l'appareil Android
     private void createInternalDirectory()
     {
@@ -48,11 +55,9 @@ public class DirectoryManager
         if (!file.exists())
             file.mkdir();
     }
-
-    // Permet de supprimer un dossier et son contenu dans le dossier de l'application
-    public void rmdirFolderInAppFolder(String directoryName)
+    public void rmdirFolder(String path)
     {
-        File file = new File(OUTPUT_DIRECTORY + "/" + directoryName);
+        File file = new File(path);
         if (file.isDirectory())
         {
             String[] children = file.list();
@@ -61,23 +66,8 @@ public class DirectoryManager
                 new File(file, children[i]).delete();
             }
         }
-    }
 
-    // Permet de supprimer tous les dossiers de l'application
-    public void rmdirAllAppFolder()
-    {
-        File file = new File(OUTPUT_DIRECTORY);
-        if (file.isDirectory())
-        {
-            String[] children = file.list();
-            for (int i = 0; i < children.length; i++)
-            {
-                if(file.isDirectory())
-                    rmdirFolderInAppFolder(file.getName());
-                else
-                    file.delete();
-            }
-        }
+        file.delete();
     }
     public File getFileTest(String sFile) {
         return new File(OUTPUT_DIRECTORY+"/"+sFile);
