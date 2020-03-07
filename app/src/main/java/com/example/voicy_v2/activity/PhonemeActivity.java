@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.voicy_v2.R;
 import com.example.voicy_v2.interfaces.CallbackServer;
@@ -16,12 +17,16 @@ import com.example.voicy_v2.model.ServerRequest;
 
 import java.util.HashMap;
 
-public class PhonemeActivity extends AppCompatActivity implements CallbackServer {
+public class PhonemeActivity extends AppCompatActivity implements CallbackServer
+{
+
+    private static final String TOOLBAR_TITLE = "UNDEFINED";
 
     private Button btn_test; //TODO A virer !
     private ServerRequest requestPhoneme;
 
     private Context context = this;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,5 +54,13 @@ public class PhonemeActivity extends AppCompatActivity implements CallbackServer
     @Override
     public void executeAfterResponseServer(String response, int idServer) {
 
+    }
+
+    private void configOfToolbar()
+    {
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(TOOLBAR_TITLE);
     }
 }

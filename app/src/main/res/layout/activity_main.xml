@@ -6,6 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
+    <include
+        android:id="@+id/include3"
+        layout="@layout/toolbar" />
+
     <Button
         android:id="@+id/btn_sentence"
         style="@style/Widget.AppCompat.Button"

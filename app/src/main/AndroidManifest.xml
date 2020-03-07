@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ExerciceActivity"></activity>
+        <activity android:name=".activity.ResultatActivity"></activity>
+        <activity android:name=".activity.ExerciceActivity" />
         <activity android:name=".activity.PhonemeActivity" />
         <activity android:name=".activity.PermissionCheckerActivity">
             <intent-filter>

@@ -1,11 +1,17 @@
 package com.example.voicy_v2.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.voicy_v2.R;
 import com.example.voicy_v2.interfaces.CallbackServer;
@@ -14,17 +20,22 @@ import com.example.voicy_v2.model.ServerRequest;
 
 public class MainActivity extends AppCompatActivity implements CallbackServer
 {
+    private static final String TOOLBAR_TITLE = "Voicy";
+
     private ServerRequest requestPhoneme, requestPhrase;
 
     private Button btn_phoneme;
     private Button btn_sentence;
     private Button btn_rslt;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        configOfToolbar();
 
         DirectoryManager.getInstance().initProject();
 
@@ -35,9 +46,27 @@ public class MainActivity extends AppCompatActivity implements CallbackServer
         btn_phoneme.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExerciceActivity.class);
+                intent.putExtra("type", "logatome");
                 startActivity(intent);
             }
         });
+
+        btn_sentence.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ExerciceActivity.class);
+                intent.putExtra("type", "phrase");
+                startActivity(intent);
+            }
+        });
+
+        btn_rslt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ResultatActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     @Override
@@ -76,5 +105,35 @@ public class MainActivity extends AppCompatActivity implements CallbackServer
                     }
                 })
                 .show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        Drawable drawable = menu.findItem(R.id.action_home).getIcon();
+        drawable.setColorFilter(Color.parseColor("#f7ee68"), PorterDuff.Mode.SRC_ATOP);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+
+        if(id == R.id.action_home)
+        {
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void configOfToolbar()
+    {
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setTitle(TOOLBAR_TITLE);
     }
 }
