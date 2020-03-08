@@ -19,6 +19,7 @@ public abstract class Exercice
         context = c;
     }
 
+    // Permet de déterminer si l'exercice est terminé
     public boolean isExerciceFinish()
     {
         if(actuelIteration == totalIteration)
@@ -27,11 +28,13 @@ public abstract class Exercice
         return false;
     }
 
+    // Incremente l'iteration de l'exercice
     public void nextIteration()
     {
         actuelIteration++;
     }
 
+    // Decrémente l'iteration de l'exercice
     public void previousIteration()
     {
         if(actuelIteration > 0)
@@ -40,11 +43,13 @@ public abstract class Exercice
         }
     }
 
+    // Renvoie un objet mot correspondant à celui qui est en cours d'affichage
     public Mot getActuelMot()
     {
         return listeElement.get(actuelIteration);
     }
 
+    // Renvoie sous format text : 1/3 ou bien 2/3 donc iteration / maxIteration
     public String getIterationSurMax() {  return (actuelIteration + 1) + "/" + totalIteration; }
 
     protected abstract void recupereElementExercice(String f);
@@ -53,5 +58,7 @@ public abstract class Exercice
     public int getTotalIteration() { return totalIteration;}
     public int getActuelIteration() { return actuelIteration;}
     public String getDirectoryName() { return directoryName; }
+
+    // Renvoie le chemin complet vers le dossier de l'exercice se trouvant dans resultat
     public String getDirectoryPath() { return DirectoryManager.OUTPUT_RESULTAT + "/" + directoryName;}
 }

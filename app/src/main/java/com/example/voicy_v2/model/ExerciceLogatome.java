@@ -65,13 +65,6 @@ public class ExerciceLogatome extends Exercice
 
         // Un mélange de la liste finale
         Collections.shuffle(listeElement);
-
-        /*
-        for(int i = 0; i < 5; i++)
-        {
-            Log.d("liste", listeElement.get(i).getMot());
-        }
-        */
     }
 
     @Override
@@ -79,7 +72,7 @@ public class ExerciceLogatome extends Exercice
     {
         String direcName = "Logatome_";
 
-        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HH_mm_ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmmss");
         String currentDateandTime = sdf.format(new Date());
 
         direcName += currentDateandTime;

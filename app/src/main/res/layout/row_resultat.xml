@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_margin="4dp"
+    android:id="@+id/linLayout"
+    >
+
+    <RelativeLayout
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/buttonType"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:text="L"
+            android:textSize="20sp"
+            android:textColor="#FFF"
+            android:background="@drawable/button_record"/>
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1"
+            android:text="Date :"
+            android:textColor="#202020"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="1dp"
+            android:text="Horaire :"
+            android:textColor="#202020"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textview" />
+
+        <TextView
+            android:id="@+id/txtDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="4dp"
+            android:text="22/06/2012"
+            android:textColor="#202020"
+            android:textSize="15sp"
+            app:layout_constraintStart_toEndOf="@+id/textview"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtHour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="1dp"
+            android:text="18:06:25"
+            android:textColor="#202020"
+            android:textSize="15sp"
+            app:layout_constraintStart_toEndOf="@+id/textDate"
+            app:layout_constraintTop_toBottomOf="@+id/txtDate" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
