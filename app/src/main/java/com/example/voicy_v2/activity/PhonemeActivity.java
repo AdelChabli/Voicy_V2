@@ -22,6 +22,8 @@ public class PhonemeActivity extends AppCompatActivity implements CallbackServer
 
     private static final String TOOLBAR_TITLE = "UNDEFINED";
 
+    // TODO A commenter
+
     private Button btn_test; //TODO A virer !
     private ServerRequest requestPhoneme;
 
@@ -52,7 +54,8 @@ public class PhonemeActivity extends AppCompatActivity implements CallbackServer
     }
 
     @Override
-    public void executeAfterResponseServer(String response, int idServer) {
+    public void executeAfterResponseServer(String response, int idServer)
+    {
 
     }
 

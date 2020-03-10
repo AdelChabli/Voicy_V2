@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.IOException;
 
 public class Encode {
+
+    // TODO A commenter
+
     public static String getEncode(File file) {
         byte[] bytes = new byte[0];
         try {

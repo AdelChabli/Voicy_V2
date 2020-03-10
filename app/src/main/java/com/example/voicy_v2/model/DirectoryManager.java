@@ -71,5 +71,5 @@ public class DirectoryManager
     }
     public File getFileTest(String sFile) {
         return new File(OUTPUT_DIRECTORY+"/"+sFile);
-    }
+    } // TODO à virer ?
 }
