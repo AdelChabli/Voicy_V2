@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.voicy_v2.R;
 import com.example.voicy_v2.interfaces.CallbackServer;
 import com.example.voicy_v2.model.DirectoryManager;
+import com.example.voicy_v2.model.LogVoicy;
 import com.example.voicy_v2.model.ServerRequest;
 
 public class MainActivity extends AppCompatActivity implements CallbackServer
@@ -43,8 +44,12 @@ public class MainActivity extends AppCompatActivity implements CallbackServer
         btn_sentence = findViewById(R.id.btn_sentence);
         btn_rslt = findViewById(R.id.btn_rslt);
 
+        LogVoicy.getInstance().createLogInfo("Arriver sur l'activity MainActivity");
+
         btn_phoneme.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                LogVoicy.getInstance().createLogInfo("Clique sur le bouton exercice phonème détecté");
+                LogVoicy.getInstance().createLogInfo("Changement de page vers ExerciceActivity avec envoie du paramètre [type: logatome]");
                 Intent intent = new Intent(getApplicationContext(), ExerciceActivity.class);
                 intent.putExtra("type", "logatome");
                 startActivityForResult(intent, 0);
@@ -53,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements CallbackServer
 
         btn_sentence.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                LogVoicy.getInstance().createLogInfo("Clique sur le bouton exercice phrase détecté");
+                LogVoicy.getInstance().createLogInfo("Changement de page vers PhonemeActivity avec envoie du paramètre [type: phrase]");
                 Intent intent = new Intent(getApplicationContext(), PhonemeActivity.class);
                 intent.putExtra("type", "phrase");
                 startActivityForResult(intent, 1);
@@ -61,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements CallbackServer
 
         btn_rslt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                LogVoicy.getInstance().createLogInfo("Clique sur le bouton resultat détecté");
+                LogVoicy.getInstance().createLogInfo("Changement de page vers ResultatActivity");
                 Intent intent = new Intent(getApplicationContext(), ResultatActivity.class);
                 startActivityForResult(intent, 2);
             }
@@ -110,6 +119,9 @@ public class MainActivity extends AppCompatActivity implements CallbackServer
     public void onBackPressed() {
         moveTaskToBack(false);
 
+        LogVoicy.getInstance().createLogInfo("Detection touche Back press utiliser");
+        LogVoicy.getInstance().createLogInfo("Affichage d'une alert avec choix type yes/no");
+
         new cn.pedant.SweetAlert.SweetAlertDialog(this, cn.pedant.SweetAlert.SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Êtes-vous sûr ?")
                 .setContentText("Vous aller quitter l'application.")
@@ -118,12 +130,14 @@ public class MainActivity extends AppCompatActivity implements CallbackServer
                     @Override
                     public void onClick(cn.pedant.SweetAlert.SweetAlertDialog sDialog)
                     {
+                        LogVoicy.getInstance().createLogInfo("Clique sur Yes l'application va se fermer");
                         finishAffinity();
                     }
                 })
                 .setCancelButton("Annuler", new cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(cn.pedant.SweetAlert.SweetAlertDialog sDialog) {
+                        LogVoicy.getInstance().createLogInfo("Clique sur No fermeture de la popup");
                         sDialog.dismissWithAnimation();
                     }
                 })

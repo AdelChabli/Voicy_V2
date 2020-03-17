@@ -2,7 +2,9 @@ package com.example.voicy_v2.model;
 
 import android.util.Log;
 
-public class ResultFile
+import java.io.Serializable;
+
+public class ResultFile implements Serializable
 {
     private String pathResult = DirectoryManager.OUTPUT_RESULTAT;
     private String nameFile;
