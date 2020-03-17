@@ -1,38 +1,54 @@
+/**	Import module	**/
+
 const fs = require('fs');
-// const Promise = require('promise');
 const readline = require('readline');
 const https = require('https');
 const bodyParser = require('body-parser')
 const express = require('express');
 
+
+/**	Variable d'environnement	**/
+const PATH = "temp/";
+
+/**	Init middleware express	**/
 const app = express();
 app.use(bodyParser.urlencoded({limit:'50mb',extended: true}))
 
-app.post('/', function(req,res) {
 
-	let tabPho = []
+/**	Catch en POST **/
+app.post('/', async function(req,res) {
 
-	let namePho = Buffer.from(req.body.phoneme, 'base64').toString('ascii');
-	tabPho.push(namePho);
-    let dataWav = req.body.wav.replace('data:audio/wav; codecs=opus;base64,', '');
-    //let buff = new Buffer(data, 'base64');
-    fs.writeFile(namePho+".wav", dataWav, {encoding: 'base64'}, async function(err) {
-        console.log('File created');
-    });
+	let tabPho = [];
+	let size = parseInt(req.body.size,10);
 
 
-    console.log(namePho);
+	/**	On sauvegarde toutes les wav qu'on reçoit de la requete	**/
+	for(let o in req.body) {
+		if(o.toString('ascii') == "size") continue;
 
-    console.log(tabPho);
+		let format = PATH+o.toString('ascii').substring(0,o.toString('ascii').indexOf("."));
+		tabPho.push(format);		
+		saveFile(req.body[o],format);
+	}
 
 
-	// sleep(5000, function() {
-	//    console.log("Wake up !")
-	// });
-
-	formatData("babrin.scores.txt").then(function(response){
-		res.send(response);	
+    /** Partie script **/
+    console.log("Waiting 3s...")
+	sleep(3000, function() {
+	    console.log("Wake up !")
 	});
+
+
+	/**	Création de la réponse serveur **/
+
+	let response = []
+	for (let o in tabPho) {
+		var output = await extractScore(tabPho[o]+".scores.txt");
+		output = await extractLbl(tabPho[o]+".lbl",output);
+		response.push(output);
+	}
+
+	res.send(response);
 
     res.on('finish', function() {
 		removeFile(tabPho);
@@ -55,6 +71,14 @@ server.listen(3211, () => {
     console.log("server starting on port : 3211");
 });
 
+
+function saveFile(buffer, namePho) {
+	let dataWav = buffer.replace('data:audio/wav; codecs=opus;base64,', '');
+    fs.writeFile(namePho+".wav", dataWav, {encoding: 'base64'}, async function(err) {
+        console.log('File created');
+    });
+}
+
 function removeFile(tabPho) {
 	tabPho.forEach(element => fs.unlinkSync(element+".wav"))
 }
@@ -66,7 +90,7 @@ function sleep(time, callback) {
     }
     callback();
 }
-function formatData(namefile) {
+function extractScore(namefile) {
 	return new Promise(resolve => {
 		const readInterface = readline.createInterface({
 		    input: fs.createReadStream(namefile),
@@ -87,8 +111,6 @@ function formatData(namefile) {
 			
 			if(line.includes("pause")) return;
 
-			//console.log(line);
-
 		    if(line.includes("Average for")) {
 
 		    	let phoneText = line.substring(line.indexOf('[')+1, line.indexOf(']')); 
@@ -105,7 +127,6 @@ function formatData(namefile) {
 		    	phoneme.phoneAll[countPhone].NC = ScoreNonContraint;
 
 		    	countPhone++;
-		    	// console.log("Phone ==> Score contraint : "+ ScoreContraint+ " || Score non contraint : "+ ScoreNonContraint );
 
 		    }
 		    if(line.includes("Global")) {
@@ -118,7 +139,6 @@ function formatData(namefile) {
 		    	phoneme.global.scoreContraint = ScoreContraint;
 		    	phoneme.global.scoreNonContraint = ScoreNonContraint;
 
-		    	// console.log("Global ===> Score contraint : "+ ScoreContraint +" || Score non contraint : "+ ScoreNonContraint);
 		    }
 		});
 		readInterface.on('close', () => {
@@ -128,7 +148,27 @@ function formatData(namefile) {
 
 
 }
+function extractLbl(namefile,response) {
+	return new Promise(resolve => {
+		
+		const readInterface = readline.createInterface({
+		    input: fs.createReadStream(namefile),
+			  output: process.stdout,
+			  terminal: false
+		});
 
+		var index = 0;
+		readInterface.on('line',function(line) {
+			if(line.includes('[new_sentence]') || line.includes('[pause]')) return;
 
-//curl --insecure --data "somedata" https://pedago.univ-avignon.fr:3211
+			response.phoneAll[index].start = line.substring(0,line.indexOf(" "));
+			subLine = line.substring(line.indexOf(" ")+1);
+			response.phoneAll[index].end = subLine.substring(0,subLine.indexOf(" "));
 
+			index++;			
+		});
+		readInterface.on('close', () => {
+			resolve(response);
+		})
+	});
+}
