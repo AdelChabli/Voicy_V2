@@ -101,7 +101,7 @@ function extractScore(namefile) {
 		console.log(namefile)
 
 		var phoneme = new Object();
-		phoneme.name = namefile.substring(0, namefile.indexOf("."));
+		phoneme.name = namefile.substring(namefile.indexOf("/")+1, namefile.indexOf("."));
 		phoneme.phoneAll = [];
 		phoneme.global = new Object();
 
