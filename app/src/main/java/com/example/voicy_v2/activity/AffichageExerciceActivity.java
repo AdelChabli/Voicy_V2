@@ -1,23 +1,30 @@
 package com.example.voicy_v2.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.ParseException;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.voicy_v2.R;
 import com.example.voicy_v2.model.DirectoryManager;
@@ -32,7 +39,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,11 +48,15 @@ public class AffichageExerciceActivity extends AppCompatActivity
 {
     private ResultFile resultFile;
     private String fileTXT = "";
+    private ConstraintLayout rLayout;
     private List<JSONObject> listeJSONObject = new ArrayList<>();
     private List<Logatome> listeLogatome = new ArrayList<>();
     private ListView listView;
     private Toolbar toolbar;
+    private RelativeLayout mRelativeLayout;
     private PopupWindow popUp;
+    private TableLayout tableLayout;
+    private TextView titrePopUp, textClose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -57,6 +67,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
         configOfToolbar();
 
         listView = findViewById(R.id.listeElement);
+        rLayout = findViewById(R.id.const_layout);
 
         // Permet de récuperer le paramètre envoyer par l'activité précédente
         resultFile = (ResultFile) getIntent().getSerializableExtra("resultat");
@@ -80,6 +91,148 @@ public class AffichageExerciceActivity extends AppCompatActivity
 
         listView.setAdapter(arrayAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+            {
+                showResultat(listeLogatome.get(i));
+            }
+        });
+
+    }
+
+    private void showResultat(Logatome logatome)
+    {
+        // Initialisation
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.popup_resultat,null);
+        textClose = customView.findViewById(R.id.txtClose);
+
+
+        //Initialisation de la popup
+        popUp = new PopupWindow(customView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                true);
+
+        popUp.setWindowLayoutMode(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            popUp.setElevation(5.0f);
+        }
+
+        // Configuration du titre
+        titrePopUp = popUp.getContentView().findViewById(R.id.titrePopup);
+        titrePopUp.setText(logatome.getLogatomeName());
+
+        // Configuration des lignes du tableau
+        addRowAndColumn(logatome.getListePhoneme(), logatome.getScoreNonContraint());
+
+        // Faire apparaitre la popup
+        popUp.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        popUp.showAtLocation(rLayout, Gravity.CENTER,0,0);
+        popUp.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        textClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popUp.dismiss();
+            }
+        });
+    }
+
+    private void addRowAndColumn(List<Phoneme> listePhoneme, String score)
+    {
+
+        // Configuration du tableLayout
+        TableLayout tab = popUp.getContentView().findViewById(R.id.tabResultat);
+        tab.setMinimumWidth(700);
+        tab.removeAllViews();
+
+        // Création et initialisation d'une ligne
+        TableRow ligneTitre = new TableRow(this);
+        ligneTitre.setBackgroundResource(R.drawable.row_border);
+        ligneTitre.setBackgroundColor(Color.BLACK);
+        ligneTitre.setPadding(0, 0, 0, 2); //Border between rows
+
+        // boucle pour les titres des colonnes
+        for (int i = 0; i < 3; i++)
+        {
+            TextView col = new TextView(this);
+            col.setGravity(Gravity.CENTER_HORIZONTAL);
+            col.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+            col.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+            col.setTextColor(Color.WHITE);
+
+            switch(i)
+            {
+                case 0 :
+                    if (true)
+                        col.setText(" Phoneme ");
+                    else
+                        col.setText(" Semi-Contraint ");
+                    break;
+
+                case 1 :
+                    col.setText(" Durée (frames) ");
+                    break;
+
+                case 2 :
+                    col.setText(" Score ");
+                    break;
+            }
+            // Ajout de la colonne sur la ligne
+            ligneTitre.addView(col);
+        }
+
+        // Ajout de la ligne dans le tableau
+        tab.addView(ligneTitre);
+
+        TextView scoreNorm = popUp.getContentView().findViewById(R.id.scoreNorm);
+        scoreNorm.setText(scoreNorm.getText() + ": " + score);
+        Phoneme phoneme;
+
+        // Création de ligne dynamiquement par phoneme
+        for (int i = 0; i < listePhoneme.size(); i++)
+        {
+            phoneme = listePhoneme.get(i);
+
+            // Initialisation d'une ligne
+            TableRow tabLigne = new TableRow(this);
+            tabLigne.setBackgroundColor(Color.GRAY);
+
+            // Initialisation des paramètres d'une colonne
+
+
+            // On a trois colonne donc pour chaque colonne on va ajouter une information
+            for(int j = 0; j < 3; j++)
+            {
+                TextView dataCol = new TextView(this);
+                dataCol.setBackgroundResource(R.drawable.row_border);
+                dataCol.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+                dataCol.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                dataCol.setGravity(Gravity.CENTER_HORIZONTAL);
+                dataCol.setPadding(0, 5, 0, 5);
+                dataCol.setTextColor(Color.WHITE);
+
+                switch (j)
+                {
+                    case 0:
+                        dataCol.setText(phoneme.getPhoneme());
+                        break;
+
+                    case 1:
+                        dataCol.setText(phoneme.getDebut() + "-" + phoneme.getFin());
+                        break;
+
+                    case 2:
+                        dataCol.setText(phoneme.getScoreContraint());
+                        break;
+                }
+                tabLigne.addView(dataCol);
+            }
+            tab.addView(tabLigne);
+        }
     }
 
     private void getAllElement()
