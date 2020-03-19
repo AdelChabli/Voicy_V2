@@ -3,6 +3,7 @@ package com.example.voicy_v2.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -57,6 +59,12 @@ public class AffichageExerciceActivity extends AppCompatActivity
     private PopupWindow popUp;
     private TableLayout tableLayout;
     private TextView titrePopUp, textClose;
+    private ImageButton btnEcouter;
+    private MediaPlayer mediaPlayer;
+    private boolean isListening = false;
+    private String logatomeChoisi = "";
+    private LayoutInflater inflater;
+    private View customView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -68,6 +76,9 @@ public class AffichageExerciceActivity extends AppCompatActivity
 
         listView = findViewById(R.id.listeElement);
         rLayout = findViewById(R.id.const_layout);
+        // Initialisation
+        inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        customView = inflater.inflate(R.layout.popup_resultat,null);
 
         // Permet de récuperer le paramètre envoyer par l'activité précédente
         resultFile = (ResultFile) getIntent().getSerializableExtra("resultat");
@@ -97,16 +108,41 @@ public class AffichageExerciceActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
             {
                 showResultat(listeLogatome.get(i));
+
+                chargerWav(adapterView, i);
+
+                btnEcouter = customView.findViewById(R.id.btnEcouterResultat);
+                btnEcouter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        if(!mediaPlayer.isPlaying())
+                            mediaPlayer.start();
+                    }
+                });
             }
         });
 
     }
 
+    private void chargerWav(AdapterView<?> parent, int i)
+    {
+        mediaPlayer = new MediaPlayer();
+        String path = DirectoryManager.OUTPUT_RESULTAT + "/" + resultFile.getNameFile() + "/" + listeLogatome.get(i).getLogatomeName() + ".wav";
+
+        try
+        {
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.prepare();
+        }
+        catch (Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
+
     private void showResultat(Logatome logatome)
     {
-        // Initialisation
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View customView = inflater.inflate(R.layout.popup_resultat,null);
         textClose = customView.findViewById(R.id.txtClose);
 
 
@@ -137,6 +173,14 @@ public class AffichageExerciceActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 popUp.dismiss();
+                mediaPlayer.stop();
+            }
+        });
+
+        popUp.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                mediaPlayer.stop();
             }
         });
     }
@@ -189,7 +233,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
         tab.addView(ligneTitre);
 
         TextView scoreNorm = popUp.getContentView().findViewById(R.id.scoreNorm);
-        scoreNorm.setText(scoreNorm.getText() + ": " + score);
+        scoreNorm.setText("Score normalisé : " + score);
         Phoneme phoneme;
 
         // Création de ligne dynamiquement par phoneme

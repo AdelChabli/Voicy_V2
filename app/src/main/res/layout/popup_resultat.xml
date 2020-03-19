@@ -15,11 +15,11 @@
         android:layout_gravity="end"
         android:gravity="center"
         android:text="X"
-        android:textColor="#FFF"
-        android:textSize="22sp"
+        android:textColor="#EF0101"
+        android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />*
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -68,10 +68,23 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="TextView"
-        android:textSize="20sp"
+        android:textSize="28sp"
+        android:textStyle="bold"
         android:textColor="#1C1B1B"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btnEcouterResultat"
+        android:layout_width="68dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/button_ecouter_popup"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_play_arrow_white_32dp"
+        tools:ignore="VectorDrawableCompat" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
