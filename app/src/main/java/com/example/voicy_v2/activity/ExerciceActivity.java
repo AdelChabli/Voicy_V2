@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,16 +20,26 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.voicy_v2.R;
+import com.example.voicy_v2.interfaces.CallbackServer;
 import com.example.voicy_v2.model.DirectoryManager;
 import com.example.voicy_v2.model.Exercice;
 import com.example.voicy_v2.model.ExerciceLogatome;
+import com.example.voicy_v2.model.ExercicePhrase;
+import com.example.voicy_v2.model.LogVoicy;
 import com.example.voicy_v2.model.Mot;
 import com.example.voicy_v2.model.Recorder;
+import com.example.voicy_v2.model.ServerRequest;
+
+import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 
-public class ExerciceActivity extends AppCompatActivity
+public class ExerciceActivity extends AppCompatActivity implements CallbackServer
 {
     private Toolbar toolbar;
     private Button btnAnnuler;
@@ -39,6 +52,9 @@ public class ExerciceActivity extends AppCompatActivity
     private boolean isRecording = false, isListening = false;
     private Recorder record;
     MediaPlayer mp;
+    private JSONObject jsonObject = new JSONObject();
+    private JSONArray jsonParams = new JSONArray();
+    private String wavLocation = "";
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -77,21 +93,23 @@ public class ExerciceActivity extends AppCompatActivity
 
             record = new Recorder(this, exercice.getDirectoryPath());
 
-            lireLogatome();
+            lireExercice();
         }
         else
         {
+            exercice = new ExercicePhrase(1, this);
 
+            record = new Recorder(this, exercice.getDirectoryPath());
+
+            lireExercice();
         }
     }
 
-    public void lireLogatome()
+    public void lireExercice()
     {
         if(!exercice.isExerciceFinish())
         {
-            Log.d("logATOM", "Exercice non terminer -> " + exercice.getIterationSurMax());
-
-            // Recupère le mot actuel
+            // Recupère le mot/phrase actuel
             motActuel = exercice.getActuelMot();
 
             lePrompteur.setText(motActuel.getMot());
@@ -99,12 +117,54 @@ public class ExerciceActivity extends AppCompatActivity
         }
         else
         {
-            Log.d("logATOM", "Exercice Terminer");
+            // Exercice terminer
 
+            // Affichage du jsonArray en log
+            try {
+                for(int i = 0; i < jsonParams.length(); i++)
+                {
+                    JSONObject leJsonObject = (JSONObject) jsonParams.get(i);
+                    LogVoicy.getInstance().createLogInfo("jsonArray["+i+"] -> { 'element', '" + leJsonObject.get("element").toString() + "' },");
+                    LogVoicy.getInstance().createLogInfo("jsonArray["+i+"] -> { 'wav', " + leJsonObject.get("wav").toString() + " },");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            if(typeExercice.equals("logatome"))
+            {
+                ServerRequest requestLogatome = new ServerRequest(this, ExerciceActivity.this);
+                requestLogatome.sendHttpsRequest(jsonParams, ServerRequest.URL_SERVER_LOGATOME, 10000);
+            }
+            else
+            {
+                ServerRequest requestPhrase = new ServerRequest(this, ExerciceActivity.this);
+                requestPhrase.sendHttpsRequest(jsonParams, ServerRequest.URL_SERVER_PHRASE, 10000);
+            }
+
+
+            // TODO Et ce code là, tu peux le déplacer à la fin d'une response serveur réussi ;)
             Intent intent = new Intent(ExerciceActivity.this, ResultatActivity.class);
             startActivity(intent);
             finish();
         }
+    }
+
+    @Override
+    public void executeAfterResponseServer(final JSONArray response)
+    {
+        new Handler(Looper.getMainLooper()).post(new Runnable(){
+            @Override
+            public void run()
+            {
+                // TODO Enregistrer le jsonArray en resultat.txt dans le dossier de résultat
+
+                String pathResultat = exercice.getDirectoryPath();
+
+            }
+        });
+
     }
 
     public void initAllButton()
@@ -125,9 +185,17 @@ public class ExerciceActivity extends AppCompatActivity
         btnNext.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
+                try {
+                    jsonObject.put("element", exercice.getActuelMot().getMot());
+                    jsonObject.put("wav", getBase64FromWav(wavLocation));
+                    jsonParams.put(new JSONObject(jsonObject.toString()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 exercice.nextIteration();
                 setVisibiliteBouton(false);
-                lireLogatome();
+                lireExercice();
             }
         });
 
@@ -143,7 +211,12 @@ public class ExerciceActivity extends AppCompatActivity
                 {
                     btnRecord.setImageResource(R.drawable.mic_48dp);
                     isRecording = false;
-                    record.stopRecording(exercice.getActuelMot().getMot()+".wav");
+
+                    if(typeExercice.equals("logatome"))
+                        wavLocation = record.stopRecording(exercice.getActuelMot().getMot()+".wav");
+                    else
+                        wavLocation = record.stopRecording("phrase"+exercice.getActuelIteration()+".wav");
+
                     setVisibiliteBouton(true);
                 }
             }
@@ -182,6 +255,21 @@ public class ExerciceActivity extends AppCompatActivity
                 }
             }
         });
+    }
+
+    private String getBase64FromWav(String wavPath)
+    {
+        File files = new File(wavPath);
+
+        byte[] bytes = new byte[0];
+        try {
+            bytes = FileUtils.readFileToByteArray(files);
+            LogVoicy.getInstance().createLogInfo("Conversion " + wavPath + " en base64");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Base64.encodeToString(bytes, 0);
     }
 
     @Override

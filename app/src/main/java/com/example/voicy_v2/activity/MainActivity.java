@@ -19,7 +19,7 @@ import com.example.voicy_v2.model.DirectoryManager;
 import com.example.voicy_v2.model.LogVoicy;
 import com.example.voicy_v2.model.ServerRequest;
 
-public class MainActivity extends AppCompatActivity implements CallbackServer
+public class MainActivity extends AppCompatActivity
 {
     private static final String TOOLBAR_TITLE = "Voicy";
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements CallbackServer
             public void onClick(View v) {
                 LogVoicy.getInstance().createLogInfo("Clique sur le bouton exercice phrase détecté");
                 LogVoicy.getInstance().createLogInfo("Changement de page vers PhonemeActivity avec envoie du paramètre [type: phrase]");
-                Intent intent = new Intent(getApplicationContext(), PhonemeActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ExerciceActivity.class);
                 intent.putExtra("type", "phrase");
                 startActivityForResult(intent, 1);
             }
@@ -99,21 +99,6 @@ public class MainActivity extends AppCompatActivity implements CallbackServer
             }
         }
     }
-
-
-    @Override
-    public void executeAfterResponseServer(String response, int idServer)
-    {
-        // serveur phoneme
-        if(idServer == 0)
-            traitementPhoneme(response);
-        else
-            traitementPhrase(response);
-    }
-
-    public void traitementPhoneme(String response) {}
-
-    public void traitementPhrase(String response) {}
 
     @Override
     public void onBackPressed() {

@@ -46,22 +46,27 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
-public class RequestPhoneme extends ServerRequest
+public class RequestPhoneme
 {
     //private static final String URL_REQUEST = "https://pedago.univ-avignon.fr:3211";
     private static final String URL_REQUEST = "https://192.168.42.92:3211";
     private static final int ID_SERVER = 0;
     private static final int TIMEOUT = 10000;
+
+    /*
     public RequestPhoneme(Context context, CallbackServer callbackServer)
     {
         super(context, callbackServer);
     }
+
+
 
     //TODO Pourquoi deux class Request ? alors que la différence sera uniquement l'URL /phoneme ou /sentence
 
     @Override
     public void sendHttpsRequest(final HashMap<String, String> param)
     {
+
 
         final ProgressDialog dialog = ProgressDialog.show(context, null, "Traitement de la parole en cours");
 
@@ -167,6 +172,8 @@ public class RequestPhoneme extends ServerRequest
                     }
                 }
         };
+
+
     }
 
     private SSLSocketFactory getSSLSocketFactory()
@@ -192,4 +199,6 @@ public class RequestPhoneme extends ServerRequest
 
         return sslContext.getSocketFactory();
     }
+
+     */
 }

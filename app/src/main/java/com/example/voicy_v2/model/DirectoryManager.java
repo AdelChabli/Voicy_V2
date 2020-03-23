@@ -36,8 +36,23 @@ public class DirectoryManager
     public void createFolder(String path)
     {
         File file = new File(path);
+
         if (!file.exists())
-            file.mkdir();
+        {
+            if(file.mkdir())
+            {
+                LogVoicy.getInstance().createLogInfo("Création du dossier " + path);
+            }
+            else
+            {
+                LogVoicy.getInstance().createLogError("Impossible de créer le dossier mkdir fail " + path);
+            }
+        }
+        else
+        {
+            LogVoicy.getInstance().createLogError("Impossible de créer le dossier, le dossier existe déjà : " + path);
+        }
+
     }
 
     // Créer le dossier de notre application sur l'appareil Android

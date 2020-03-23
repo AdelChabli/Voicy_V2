@@ -120,7 +120,7 @@ public class Recorder
         }
     }
 
-    public void stopRecording(String nameWav)
+    public String stopRecording(String nameWav)
     {
         if(null != recorder)
         {
@@ -137,6 +137,8 @@ public class Recorder
 
         convertTempAudioToWavAudio(directoryToRecord + "/temp.raw", directoryToRecord + "/" + nameWav);
         deleteTempFile();
+
+        return directoryToRecord + "/" + nameWav;
     }
 
     private void convertTempAudioToWavAudio(String temp, String output)

@@ -15,6 +15,8 @@ import com.example.voicy_v2.model.Encode;
 import com.example.voicy_v2.model.RequestPhoneme;
 import com.example.voicy_v2.model.ServerRequest;
 
+import org.json.JSONArray;
+
 import java.util.HashMap;
 
 public class PhonemeActivity extends AppCompatActivity implements CallbackServer
@@ -35,6 +37,7 @@ public class PhonemeActivity extends AppCompatActivity implements CallbackServer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phoneme);
 
+        /*
         btn_test = findViewById(R.id.btn_test); //TODO A virer !
 
         btn_test.setOnClickListener(new View.OnClickListener() {
@@ -58,10 +61,12 @@ public class PhonemeActivity extends AppCompatActivity implements CallbackServer
 
             }
         });
+
+         */
     }
 
     @Override
-    public void executeAfterResponseServer(String response, int idServer)
+    public void executeAfterResponseServer(JSONArray response)
     {
 
     }
