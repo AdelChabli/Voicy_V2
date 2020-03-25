@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 
 // TODO A implementer
@@ -47,7 +46,7 @@ public class ExercicePhrase extends Exercice
                 res = line.split("\t");
 
                 // Ajout du mot dans l'arrayList avec en param 1 = mot et param 2 = phoneme
-                listeElement.add(new Mot(res[0], res[1]));
+                listeElement.add(new Mot(res[0], ""));      //TODO attention j'ai viré res[1]
 
                 i++;
 

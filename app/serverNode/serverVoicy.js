@@ -8,7 +8,7 @@ const express = require('express');
 
 
 /**	Variable d'environnement	**/
-const PATH = "temp/";
+const PATH = "input/";
 
 /**	Init middleware express	**/
 const app = express();
@@ -18,44 +18,69 @@ app.use(bodyParser.urlencoded({limit:'50mb',extended: true}))
 /**	Catch en POST **/
 app.post('/', async function(req,res) {
 
-	let tabPho = [];
-	let size = parseInt(req.body.size,10);
+	let listnameFile = [];	//tableau de stockage
+	let textExercice = "";	//String contenant le texte prononcé dans le cas d'un exercice de lecture
+	let textTemporaite = [] // Permet de remettre les phrases dans l'ordre
+	let size = parseInt(req.body.size,10);	//nombre d'élément attendu
+	let type = req.body.type;	//type d'exercice attendu
 
+/*	console.log("Type d'exercice = "+type);
+	console.log(req.body);*/
+
+	if(type == "") {res.status(400).send("Erreur de requete")}
 
 	/**	On sauvegarde toutes les wav qu'on reçoit de la requete	**/
 	for(let o in req.body) {
 		if(o.toString('ascii') == "size") continue;
+		if(o.toString('ascii') == "type") continue;
 
-		let format = PATH+o.toString('ascii').substring(0,o.toString('ascii').indexOf("."));
-		tabPho.push(format);		
-		saveFile(req.body[o],format);
+		if(type == "phrase") {
+			if(o.toString('ascii').includes("input")) {
+				let nameFile = PATH+o.toString('ascii');
+				listnameFile.push(nameFile);		
+				saveFile(req.body[o],nameFile);
+			}else if(o.toString('ascii').includes("textScript")) {
+				let index = parseInt(o.toString('ascii').substring(10),10);
+				if(index != 1) textTemporaite[index-1] = req.body[o].toLowerCase(); // Uniquement dans le contexte des phrases de Mr Seguin basé sur lex.phon
+				else textTemporaite[index-1] = req.body[o];
+			}
+		} else if(type == "logatome") {
+			let nameFile = PATH+o.toString('ascii');
+			listnameFile.push(nameFile);		
+			saveFile(req.body[o],nameFile);
+		}
 	}
 
+	console.log(textTemporaite);
+	for(let i of textTemporaite) {
+		textExercice += i;
+		textExercice += " ";
+	}
+	textExercice = await formatCase(textExercice);
+	console.log(textExercice);
+	return;
 
     /** Partie script **/
-    console.log("Waiting 3s...")
-	sleep(3000, function() {
-	    console.log("Wake up !")
-	});
+
 
 
 	/**	Création de la réponse serveur **/
 
 	let response = []
-	for (let o in tabPho) {
-		var output = await extractScore(tabPho[o]+".scores.txt");
-		output = await extractLbl(tabPho[o]+".lbl",output);
+	for (let o in listnameFile) {
+		var output = await extractScore(listnameFile[o]+".scores.txt");
+		output = await extractLbl(listnameFile[o]+".lbl",output);
 		response.push(output);
 	}
 
 	res.send(response);
 
     res.on('finish', function() {
-		removeFile(tabPho);
+		removeFile(listnameFile);
 	});
 
 	res.on('error', function() {
-		removeFile(tabPho);
+		removeFile(listnameFile);
 	});
 
 });
@@ -72,15 +97,15 @@ server.listen(3211, () => {
 });
 
 
-function saveFile(buffer, namePho) {
+function saveFile(buffer, nameFile) {
 	let dataWav = buffer.replace('data:audio/wav; codecs=opus;base64,', '');
-    fs.writeFile(namePho+".wav", dataWav, {encoding: 'base64'}, async function(err) {
+    fs.writeFile(nameFile+".wav", dataWav, {encoding: 'base64'}, async function(err) {
         console.log('File created');
     });
 }
 
-function removeFile(tabPho) {
-	tabPho.forEach(element => fs.unlinkSync(element+".wav"))
+function removeFile(listnameFile) {
+	listnameFile.forEach(element => fs.unlinkSync(element+".wav"))
 }
 
 function sleep(time, callback) {
@@ -90,18 +115,18 @@ function sleep(time, callback) {
     }
     callback();
 }
-function extractScore(namefile) {
+function extractScore(nameFile) {
 	return new Promise(resolve => {
 		const readInterface = readline.createInterface({
-		    input: fs.createReadStream(namefile),
+		    input: fs.createReadStream(nameFile),
 			  output: process.stdout,
 			  terminal: false
 		});
 
-		console.log(namefile)
+		console.log(nameFile)
 
 		var phoneme = new Object();
-		phoneme.name = namefile.substring(namefile.indexOf("/")+1, namefile.indexOf("."));
+		phoneme.name = nameFile.substring(nameFile.indexOf("/")+1, nameFile.indexOf("."));
 		phoneme.phoneAll = [];
 		phoneme.global = new Object();
 
@@ -148,11 +173,11 @@ function extractScore(namefile) {
 
 
 }
-function extractLbl(namefile,response) {
+function extractLbl(nameFile,response) {
 	return new Promise(resolve => {
 		
 		const readInterface = readline.createInterface({
-		    input: fs.createReadStream(namefile),
+		    input: fs.createReadStream(nameFile),
 			  output: process.stdout,
 			  terminal: false
 		});
@@ -170,5 +195,20 @@ function extractLbl(namefile,response) {
 		readInterface.on('close', () => {
 			resolve(response);
 		})
+	});
+}
+
+function formatCase(textExercice) {
+	return new Promise(resolve => {
+		textExercice = textExercice.replace(/'/g, '_');
+		textExercice = textExercice.replace(/-/g, '_');
+		textExercice = textExercice.replace(/é/g, 'e1');
+		textExercice = textExercice.replace(/è/g, 'e2');
+		textExercice = textExercice.replace(/ê/g, 'e3');
+		textExercice = textExercice.replace(/ç/g, 'c5');
+		textExercice = textExercice.replace(/î/g, 'i3');
+		textExercice = textExercice.replace(/à/g, 'a2');
+
+		resolve(textExercice);
 	});
 }

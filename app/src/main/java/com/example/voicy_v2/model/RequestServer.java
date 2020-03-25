@@ -19,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.voicy_v2.R;
 import com.example.voicy_v2.interfaces.CallbackServer;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,25 +47,24 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
-public class RequestPhoneme
+public class RequestServer
 {
     //private static final String URL_REQUEST = "https://pedago.univ-avignon.fr:3211";
-    private static final String URL_REQUEST = "https://192.168.42.92:3211";
+    private static final String URL_REQUEST = "https://192.168.42.226:3211";
     private static final int ID_SERVER = 0;
     private static final int TIMEOUT = 10000;
 
-    /*
-    public RequestPhoneme(Context context, CallbackServer callbackServer)
+    private Context context;
+    private CallbackServer callbackServer;
+
+
+    public RequestServer(Context context, CallbackServer callbackServer)
     {
-        super(context, callbackServer);
+        this.context = context;
+        this.callbackServer = callbackServer;
     }
 
-
-
-    //TODO Pourquoi deux class Request ? alors que la différence sera uniquement l'URL /phoneme ou /sentence
-
-    @Override
-    public void sendHttpsRequest(final HashMap<String, String> param)
+    public void sendHttpsRequest(final HashMap<String, String> params, String type)
     {
 
 
@@ -103,6 +103,9 @@ public class RequestPhoneme
             public void onResponse(String response) {
                 Log.d("APP", response);
                 try {
+                    JSONArray array = new JSONArray(response);
+                    callbackServer.executeAfterResponseServer(array);
+
                     Storage.store(new JSONObject(response), Storage.PHONE);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -116,12 +119,11 @@ public class RequestPhoneme
             public void onErrorResponse(VolleyError error) {
                 Log.d("APP", "Error = " +error);
                 dialog.dismiss();
-                callback.executeAfterResponseServer("Indisponibilité du serveur", ID_SERVER);
             }
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                return param;
+                return params;
             }
         };
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(TIMEOUT,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -199,6 +201,4 @@ public class RequestPhoneme
 
         return sslContext.getSocketFactory();
     }
-
-     */
 }

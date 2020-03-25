@@ -1,9 +1,5 @@
 package com.example.voicy_v2.activity;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -11,13 +7,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.voicy_v2.R;
 import com.example.voicy_v2.interfaces.CallbackServer;
@@ -28,7 +27,7 @@ import com.example.voicy_v2.model.ExercicePhrase;
 import com.example.voicy_v2.model.LogVoicy;
 import com.example.voicy_v2.model.Mot;
 import com.example.voicy_v2.model.Recorder;
-import com.example.voicy_v2.model.ServerRequest;
+import com.example.voicy_v2.model.RequestServer;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
@@ -37,7 +36,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.HashMap;
 
 public class ExerciceActivity extends AppCompatActivity implements CallbackServer
 {
@@ -54,7 +53,10 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
     MediaPlayer mp;
     private JSONObject jsonObject = new JSONObject();
     private JSONArray jsonParams = new JSONArray();
+    private HashMap<String,String> params = new HashMap<>();
     private String wavLocation = "";
+    private int index = 1;
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -67,18 +69,22 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
         lePrompteur = findViewById(R.id.prompteur);
         iterationEnCours = findViewById(R.id.txtNumElement);
 
+        // TODO Pour l'instant, on peut lancer mini 3 logatomes (à rendre modulable)
+        maxIteration = 5;
+
         // Permet de récuperer le paramètre envoyer par l'activité précédente
         Bundle param = getIntent().getExtras();
         typeExercice = param.getString("type");
+
+        // Permet de configurer la request avec le type de l'exercice
+        params.put("type",typeExercice);
+        params.put("size",String.valueOf(maxIteration));
 
         // Permet de configurer la toolbar pour cette activité
         configOfToolbar(typeExercice);
 
         // Initialise les boutons et les configures
         initAllButton();
-
-        // TODO Pour l'instant, on peut lancer mini 3 logatomes (à rendre modulable)
-        maxIteration = 2;
 
         // Lance l'exercice
         lancerExercice();
@@ -97,7 +103,7 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
         }
         else
         {
-            exercice = new ExercicePhrase(1, this);
+            exercice = new ExercicePhrase(maxIteration, this);
 
             record = new Recorder(this, exercice.getDirectoryPath());
 
@@ -132,16 +138,9 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
             }
 
 
-            if(typeExercice.equals("logatome"))
-            {
-                ServerRequest requestLogatome = new ServerRequest(this, ExerciceActivity.this);
-                requestLogatome.sendHttpsRequest(jsonParams, ServerRequest.URL_SERVER_LOGATOME, 10000);
-            }
-            else
-            {
-                ServerRequest requestPhrase = new ServerRequest(this, ExerciceActivity.this);
-                requestPhrase.sendHttpsRequest(jsonParams, ServerRequest.URL_SERVER_PHRASE, 10000);
-            }
+            RequestServer requestLogatome = new RequestServer(this, ExerciceActivity.this);
+            requestLogatome.sendHttpsRequest(params, this.typeExercice);
+
 
 
             // TODO Et ce code là, tu peux le déplacer à la fin d'une response serveur réussi ;)
@@ -185,14 +184,15 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
         btnNext.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
-                try {
-                    jsonObject.put("element", exercice.getActuelMot().getMot());
-                    jsonObject.put("wav", getBase64FromWav(wavLocation));
-                    jsonParams.put(new JSONObject(jsonObject.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
+                if(typeExercice.equals("logatome")) {
+                    params.put(exercice.getActuelMot().getMot(), getBase64FromWav(wavLocation));
+                } else {
+                    params.put("textScript"+index, exercice.getActuelMot().getMot());
+                    params.put("input"+index, getBase64FromWav(wavLocation));
                 }
 
+                index++;
                 exercice.nextIteration();
                 setVisibiliteBouton(false);
                 lireExercice();
@@ -257,7 +257,7 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
         });
     }
 
-    private String getBase64FromWav(String wavPath)
+    private String getBase64FromWav(String wavPath) //TODO deja codé dans le class Encode.java
     {
         File files = new File(wavPath);
 

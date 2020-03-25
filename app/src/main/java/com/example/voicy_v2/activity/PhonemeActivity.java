@@ -2,7 +2,6 @@ package com.example.voicy_v2.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,14 +9,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.voicy_v2.R;
 import com.example.voicy_v2.interfaces.CallbackServer;
-import com.example.voicy_v2.model.DirectoryManager;
-import com.example.voicy_v2.model.Encode;
-import com.example.voicy_v2.model.RequestPhoneme;
 import com.example.voicy_v2.model.ServerRequest;
 
 import org.json.JSONArray;
-
-import java.util.HashMap;
 
 public class PhonemeActivity extends AppCompatActivity implements CallbackServer
 {
