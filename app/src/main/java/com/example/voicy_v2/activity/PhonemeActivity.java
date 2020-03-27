@@ -13,7 +13,7 @@ import com.example.voicy_v2.model.ServerRequest;
 
 import org.json.JSONArray;
 
-public class PhonemeActivity extends AppCompatActivity implements CallbackServer
+public class PhonemeActivity extends AppCompatActivity
 {
 
     private static final String TOOLBAR_TITLE = "UNDEFINED";
@@ -57,12 +57,6 @@ public class PhonemeActivity extends AppCompatActivity implements CallbackServer
         });
 
          */
-    }
-
-    @Override
-    public void executeAfterResponseServer(JSONArray response)
-    {
-
     }
 
     private void configOfToolbar()

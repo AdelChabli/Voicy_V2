@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity
                 LogVoicy.getInstance().createLogInfo("Changement de page vers ExerciceActivity avec envoie du paramètre [type: logatome]");
                 Intent intent = new Intent(getApplicationContext(), ExerciceActivity.class);
                 intent.putExtra("type", "logatome");
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 startActivityForResult(intent, 0);
             }
         });
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity
                 LogVoicy.getInstance().createLogInfo("Changement de page vers PhonemeActivity avec envoie du paramètre [type: phrase]");
                 Intent intent = new Intent(getApplicationContext(), ExerciceActivity.class);
                 intent.putExtra("type", "phrase");
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 startActivityForResult(intent, 1);
             }
         });
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity
                 LogVoicy.getInstance().createLogInfo("Clique sur le bouton resultat détecté");
                 LogVoicy.getInstance().createLogInfo("Changement de page vers ResultatActivity");
                 Intent intent = new Intent(getApplicationContext(), ResultatActivity.class);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 startActivityForResult(intent, 2);
             }
         });

@@ -82,7 +82,14 @@ public class DirectoryManager
             }
         }
 
-        file.delete();
+        if(file.delete())
+        {
+            LogVoicy.getInstance().createLogInfo("Suppression de " + path);
+        }
+        else
+        {
+            LogVoicy.getInstance().createLogError("Impossible de supprimer " + path);
+        }
     }
     public File getFileTest(String sFile) {
         return new File(OUTPUT_DIRECTORY+"/"+sFile);

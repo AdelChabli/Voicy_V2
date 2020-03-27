@@ -41,6 +41,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class ExerciceActivity extends AppCompatActivity implements CallbackServer
 {
     private Toolbar toolbar;
@@ -180,11 +182,35 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
 
                 Intent intent = new Intent(ExerciceActivity.this, ResultatActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
 
     }
+
+    @Override
+    public void exercuceAfterErrorServer(String error)
+    {
+        DirectoryManager.getInstance().rmdirFolder(exercice.getDirectoryPath());
+
+        SweetAlertDialog sDialog = new SweetAlertDialog(ExerciceActivity.this, SweetAlertDialog.ERROR_TYPE);
+        sDialog.setTitleText("Oups ...");
+        sDialog.setContentText(error);
+        sDialog.setConfirmText("Ok");
+        sDialog.setCancelable(false);
+        sDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener()
+        {
+            @Override
+            public void onClick(SweetAlertDialog sDialog) {
+                sDialog.dismissWithAnimation();
+                finish();
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }
+        });
+        sDialog.show();
+    }
+
 
     public void initAllButton()
     {

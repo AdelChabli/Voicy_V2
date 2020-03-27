@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.voicy_v2.R;
 import com.example.voicy_v2.activity.AffichageExerciceActivity;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.Serializable;
 import java.util.List;
@@ -34,8 +35,11 @@ public class RecyclerResultAdapter extends RecyclerView.Adapter<RecyclerResultAd
     public void deleteItem(int position)
     {
         ResultFile resultFile = listeResultat.get(position);
+
         DirectoryManager.getInstance().rmdirFolder(DirectoryManager.OUTPUT_RESULTAT + "/" + resultFile.getNameFile());
+
         listeResultat.remove(position);
+
         notifyItemRemoved(position);
     }
 

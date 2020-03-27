@@ -100,8 +100,9 @@ public class RequestServer
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_REQUEST, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
-                Log.d("RESPONSE==>", response);
+            public void onResponse(String response)
+            {
+                LogVoicy.getInstance().createLogInfo(response);
                 try {
                     JSONArray array = new JSONArray(response);
                     callbackServer.executeAfterResponseServer(array);
@@ -116,9 +117,21 @@ public class RequestServer
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("APP", "Error = " +error);
+            public void onErrorResponse(VolleyError error)
+            {
+                LogVoicy.getInstance().createLogError(error.toString());
                 dialog.dismiss();
+
+                if(error.networkResponse == null)
+                {
+                    callbackServer.exercuceAfterErrorServer("Impossible d'intéragir avec le serveur, vérifier votre connexion internet ou bien le serveur n'est plus disponible.");
+                }
+                else
+                {
+                    callbackServer.exercuceAfterErrorServer(error.toString());
+                }
+
+
             }
         }){
             @Override
