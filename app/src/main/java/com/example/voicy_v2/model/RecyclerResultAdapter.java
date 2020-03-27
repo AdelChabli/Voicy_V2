@@ -31,6 +31,14 @@ public class RecyclerResultAdapter extends RecyclerView.Adapter<RecyclerResultAd
         this.listeResultat = listResult;
     }
 
+    public void deleteItem(int position)
+    {
+        ResultFile resultFile = listeResultat.get(position);
+        DirectoryManager.getInstance().rmdirFolder(DirectoryManager.OUTPUT_RESULTAT + "/" + resultFile.getNameFile());
+        listeResultat.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public class ResultViewHolder extends RecyclerView.ViewHolder
     {
         public TextView laDate, lheure;

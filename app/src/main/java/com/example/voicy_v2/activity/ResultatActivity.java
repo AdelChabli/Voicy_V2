@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +19,7 @@ import com.example.voicy_v2.model.DirectoryManager;
 import com.example.voicy_v2.model.RecyclerResultAdapter;
 import com.example.voicy_v2.model.ResultFile;
 import com.example.voicy_v2.model.SortFileByCreationDate;
+import com.example.voicy_v2.model.SwipeHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,6 +49,11 @@ public class ResultatActivity extends AppCompatActivity
         recyclerView.setAdapter(rAdapter);
 
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
+        ItemTouchHelper.Callback callback = new SwipeHelper(this, rAdapter);
+        ItemTouchHelper helper = new ItemTouchHelper(callback);
+        helper.attachToRecyclerView(recyclerView);
+
     }
 
     // Fonction permettant de récupérer tous dossier résultat et en les transformants en objet ResultFile
