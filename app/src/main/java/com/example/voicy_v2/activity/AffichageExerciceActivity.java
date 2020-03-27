@@ -65,6 +65,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
     private String logatomeChoisi = "";
     private LayoutInflater inflater;
     private View customView;
+    private int phraseIterator = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -95,7 +96,8 @@ public class AffichageExerciceActivity extends AppCompatActivity
 
         for(Logatome logatome : listeLogatome)
         {
-            element.add(logatome.getLogatomeName());
+            element.add("phrase" + phraseIterator);
+            phraseIterator++;
         }
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, element);
@@ -107,7 +109,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
             {
-                showResultat(listeLogatome.get(i));
+                showResultat(listeLogatome.get(i), i);
 
                 chargerWav(adapterView, i);
 
@@ -128,7 +130,17 @@ public class AffichageExerciceActivity extends AppCompatActivity
     private void chargerWav(AdapterView<?> parent, int i)
     {
         mediaPlayer = new MediaPlayer();
-        String path = DirectoryManager.OUTPUT_RESULTAT + "/" + resultFile.getNameFile() + "/" + listeLogatome.get(i).getLogatomeName() + ".wav";
+
+        String path = "";
+
+        if(resultFile.getNameFile().substring(0,1).toLowerCase().equals("p"))
+        {
+            path = DirectoryManager.OUTPUT_RESULTAT + "/" + resultFile.getNameFile() + "/phrase" + (i+1) + ".wav";
+        }
+        else
+        {
+            path = DirectoryManager.OUTPUT_RESULTAT + "/" + resultFile.getNameFile() + "/" + listeLogatome.get(i).getLogatomeName() + ".wav";
+        }
 
         try
         {
@@ -141,7 +153,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
         }
     }
 
-    private void showResultat(Logatome logatome)
+    private void showResultat(Logatome logatome, int i)
     {
         textClose = customView.findViewById(R.id.txtClose);
 
@@ -159,7 +171,16 @@ public class AffichageExerciceActivity extends AppCompatActivity
 
         // Configuration du titre
         titrePopUp = popUp.getContentView().findViewById(R.id.titrePopup);
-        titrePopUp.setText(logatome.getLogatomeName());
+
+        if(resultFile.getNameFile().substring(0,1).toLowerCase().equals("p"))
+        {
+            titrePopUp.setText("phrase n°" + (i+1));
+        }
+        else
+        {
+            titrePopUp.setText(logatome.getLogatomeName());
+        }
+
 
         // Configuration des lignes du tableau
         addRowAndColumn(logatome.getListePhoneme(), logatome.getScoreNonContraint());

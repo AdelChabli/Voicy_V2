@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class ExerciceActivity extends AppCompatActivity implements CallbackServer
@@ -148,14 +151,33 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
     public void executeAfterResponseServer(final JSONArray response)
     {
         new Handler(Looper.getMainLooper()).post(new Runnable(){
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void run()
             {
-                // TODO Enregistrer le jsonArray en resultat.txt dans le dossier de résultat
 
-                String pathResultat = exercice.getDirectoryPath();
+                String pathResultat = exercice.getDirectoryPath()+"/resultat.txt";
 
-                // TODO Et ce code là, tu peux le déplacer à la fin d'une response serveur réussi ;)
+                File file = new File(pathResultat);
+                try {
+                    if(file.createNewFile())
+                    {
+                        LogVoicy.getInstance().createLogInfo("Fichier " + pathResultat + " créer avec succès");
+                    }
+                    else
+                    {
+                        LogVoicy.getInstance().createLogError("Fichier " + pathResultat + " non créer");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    Files.write(Paths.get(pathResultat), response.toString().getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 Intent intent = new Intent(ExerciceActivity.this, ResultatActivity.class);
                 startActivity(intent);
                 finish();
@@ -213,7 +235,7 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
                     if(typeExercice.equals("logatome"))
                         wavLocation = record.stopRecording(exercice.getActuelMot().getMot()+".wav");
                     else
-                        wavLocation = record.stopRecording("phrase"+exercice.getActuelIteration()+".wav");
+                        wavLocation = record.stopRecording("phrase"+ (exercice.getActuelIteration() + 1) +".wav");
 
                     setVisibiliteBouton(true);
                 }
@@ -225,7 +247,16 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
                 if (mp == null) {
                     try {
                         mp = new MediaPlayer();
-                        mp.setDataSource(exercice.getDirectoryPath() + "/" + exercice.getActuelMot().getMot() + ".wav");
+
+                        if(typeExercice.equals("logatome"))
+                        {
+                            mp.setDataSource(exercice.getDirectoryPath() + "/" + exercice.getActuelMot().getMot() + ".wav");
+                        }
+                        else
+                        {
+                            mp.setDataSource(exercice.getDirectoryPath() + "/phrase"+ (exercice.getActuelIteration() + 1) + ".wav");
+                        }
+
                         mp.prepare();
                     } catch (IOException e) {
                         e.printStackTrace();

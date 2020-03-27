@@ -27,8 +27,8 @@ public class ServerRequest
 {
     protected Context context;
     protected CallbackServer callback;
-    public static final String URL_SERVER_LOGATOME = "";
-    public static final String URL_SERVER_PHRASE = "";
+    public static final String URL_SERVER_LOGATOME = "http://pedago.univ-avignon.fr:3211";
+    public static final String URL_SERVER_PHRASE = "http://pedago.univ-avignon.fr:3211";
 
     public ServerRequest(Context context, CallbackServer callback)
     {
