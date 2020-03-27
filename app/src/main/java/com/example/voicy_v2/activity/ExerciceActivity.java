@@ -70,7 +70,7 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
         iterationEnCours = findViewById(R.id.txtNumElement);
 
         // TODO Pour l'instant, on peut lancer mini 3 logatomes (à rendre modulable)
-        maxIteration = 5;
+        maxIteration = 1;
 
         // Permet de récuperer le paramètre envoyer par l'activité précédente
         Bundle param = getIntent().getExtras();
@@ -141,12 +141,6 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
             RequestServer requestLogatome = new RequestServer(this, ExerciceActivity.this);
             requestLogatome.sendHttpsRequest(params, this.typeExercice);
 
-
-
-            // TODO Et ce code là, tu peux le déplacer à la fin d'une response serveur réussi ;)
-            Intent intent = new Intent(ExerciceActivity.this, ResultatActivity.class);
-            startActivity(intent);
-            finish();
         }
     }
 
@@ -161,6 +155,10 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
 
                 String pathResultat = exercice.getDirectoryPath();
 
+                // TODO Et ce code là, tu peux le déplacer à la fin d'une response serveur réussi ;)
+                Intent intent = new Intent(ExerciceActivity.this, ResultatActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
