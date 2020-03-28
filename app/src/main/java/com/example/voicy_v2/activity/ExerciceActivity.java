@@ -50,7 +50,7 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
     private ImageButton btnNext, btnEcouter, btnRecord;
     private TextView lePrompteur, iterationEnCours;
     private Exercice exercice;
-    private String typeExercice;
+    private String typeExercice, genre;
     private int maxIteration;
     private Mot motActuel;
     private boolean isRecording = false, isListening = false;
@@ -74,12 +74,18 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
         lePrompteur = findViewById(R.id.prompteur);
         iterationEnCours = findViewById(R.id.txtNumElement);
 
-        // TODO Pour l'instant, on peut lancer mini 3 logatomes (à rendre modulable)
-        maxIteration = 1;
-
         // Permet de récuperer le paramètre envoyer par l'activité précédente
         Bundle param = getIntent().getExtras();
         typeExercice = param.getString("type");
+        maxIteration = param.getInt("iteration");
+
+        // TODO ICI TU AS LE GENRE LEO ! ICI TU AS LE GENRE LEO ! ICI TU AS LE GENRE LEO ! ICI TU AS LE GENRE LEO !
+        genre = param.getString("genre"); // Homme ou Femme
+
+        // Log
+        LogVoicy.getInstance().createLogInfo("Exercice " + typeExercice);
+        LogVoicy.getInstance().createLogInfo("Genre : " + genre);
+        LogVoicy.getInstance().createLogInfo("MaxIteration : " + maxIteration);
 
         // Permet de configurer la request avec le type de l'exercice
         params.put("type",typeExercice);
@@ -93,6 +99,7 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
 
         // Lance l'exercice
         lancerExercice();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -100,6 +107,8 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
     {
         if(typeExercice.equals("logatome"))
         {
+            lePrompteur.setTextSize(46);
+
             exercice = new ExerciceLogatome(maxIteration, this);
 
             record = new Recorder(this, exercice.getDirectoryPath());
@@ -108,6 +117,8 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
         }
         else
         {
+            lePrompteur.setTextSize(38);
+
             exercice = new ExercicePhrase(maxIteration, this);
 
             record = new Recorder(this, exercice.getDirectoryPath());

@@ -8,7 +8,9 @@
 
     <include
         android:id="@+id/include3"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-305dp" />
 
     <ImageButton
         android:id="@+id/buttonRecord"
