@@ -17,6 +17,8 @@ import com.example.voicy_v2.R;
 import com.example.voicy_v2.model.DirectoryManager;
 import com.szagurskii.patternedtextwatcher.PatternedTextWatcher;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class ConfigurationExerciceActivity extends AppCompatActivity
 {
 
@@ -55,7 +57,7 @@ public class ConfigurationExerciceActivity extends AppCompatActivity
             public void onClick(View view) {
                 if(String.valueOf(editIteration.getText()).length() > 2 || String.valueOf(editIteration.getText()).length() < 1)
                 {
-                    mauvaiseConfig();
+                    mauvaiseConfig("Veuillez remplir le nombre d'exercice à effectuer");
                 }
                 else
                 {
@@ -64,7 +66,11 @@ public class ConfigurationExerciceActivity extends AppCompatActivity
 
                     if(iteration == 0)
                     {
-                        mauvaiseConfig();
+                        mauvaiseConfig("Impossible de lancer 0 exercice.");
+                    }
+                    else if(iteration > 12)
+                    {
+                        mauvaiseConfig("Impossible de lancer plus de 12 exercices");
                     }
                     else
                     {
@@ -83,9 +89,21 @@ public class ConfigurationExerciceActivity extends AppCompatActivity
 
     }
 
-    public void mauvaiseConfig()
+    public void mauvaiseConfig(String error)
     {
-
+        SweetAlertDialog sDialog = new SweetAlertDialog(ConfigurationExerciceActivity.this, SweetAlertDialog.ERROR_TYPE);
+        sDialog.setTitleText("Oups ...");
+        sDialog.setContentText(error);
+        sDialog.setConfirmText("Ok");
+        sDialog.setCancelable(false);
+        sDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener()
+        {
+            @Override
+            public void onClick(SweetAlertDialog sDialog) {
+                sDialog.dismissWithAnimation();
+            }
+        });
+        sDialog.show();
     }
 
     // ----------------------- SECTION TOOLBAR ET ACTION LORS DES BACK / CLIQUE ITEM MENU -----------------------------
