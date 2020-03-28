@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -78,8 +77,6 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
         Bundle param = getIntent().getExtras();
         typeExercice = param.getString("type");
         maxIteration = param.getInt("iteration");
-
-        // TODO ICI TU AS LE GENRE LEO ! ICI TU AS LE GENRE LEO ! ICI TU AS LE GENRE LEO ! ICI TU AS LE GENRE LEO !
         genre = param.getString("genre"); // Homme ou Femme
 
         // Log
@@ -88,6 +85,7 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
         LogVoicy.getInstance().createLogInfo("MaxIteration : " + maxIteration);
 
         // Permet de configurer la request avec le type de l'exercice
+        params.put("gender",genre);
         params.put("type",typeExercice);
         params.put("size",String.valueOf(maxIteration));
 

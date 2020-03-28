@@ -49,8 +49,8 @@ import javax.net.ssl.X509TrustManager;
 
 public class RequestServer
 {
-    private static final String URL_REQUEST = "https://pedago.univ-avignon.fr:3211";
-    //private static final String URL_REQUEST = "https://192.168.42.226:3211";
+    private static final String URL_REQUEST = "https://pedago.univ-avignon.fr:3212";
+    //private static final String URL_REQUEST = "https://192.168.42.49:3211";
     private static final int ID_SERVER = 0;
     private static final int TIMEOUT = 30000;
 
