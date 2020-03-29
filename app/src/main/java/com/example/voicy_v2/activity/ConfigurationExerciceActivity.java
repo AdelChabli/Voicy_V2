@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.voicy_v2.R;
-import com.example.voicy_v2.model.DirectoryManager;
 import com.szagurskii.patternedtextwatcher.PatternedTextWatcher;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -86,7 +85,6 @@ public class ConfigurationExerciceActivity extends AppCompatActivity
                 }
             }
         });
-
     }
 
     public void mauvaiseConfig(String error)

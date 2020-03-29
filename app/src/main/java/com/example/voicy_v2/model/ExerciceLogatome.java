@@ -2,6 +2,7 @@ package com.example.voicy_v2.model;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -9,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Random;
@@ -22,13 +24,8 @@ public class ExerciceLogatome extends Exercice
         super(c);
         totalIteration = nb;
 
-        // Randomise un chiffre entre 1 et 4 (pour selectionner la liste des logatomes à prendre dans assets)
-        Random random = new Random();
-        int num = random.nextInt((4 - 1) + 1) + 1;
-
         // Va récuperer les nonmots de la liste
-        //recupereElementExercice("Liste" + num);
-        recupereElementExercice("ListeTest");
+        recupereElementExercice("lexique_phone.AA4");
 
         directoryName = getExerciceDirectory();
 
@@ -50,6 +47,8 @@ public class ExerciceLogatome extends Exercice
             String line;
             while ((line = br.readLine()) != null)
             {
+                line = line.substring(line.indexOf("\t")+1);
+
                 // split de la ligne par rapport à une tabulation
                 res = line.split("\t");
 
