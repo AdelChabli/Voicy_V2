@@ -2,7 +2,6 @@ package com.example.voicy_v2.model;
 
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -10,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Random;
@@ -29,7 +27,8 @@ public class ExerciceLogatome extends Exercice
         int num = random.nextInt((4 - 1) + 1) + 1;
 
         // Va récuperer les nonmots de la liste
-        recupereElementExercice("Liste" + num);
+        //recupereElementExercice("Liste" + num);
+        recupereElementExercice("ListeTest");
 
         directoryName = getExerciceDirectory();
 

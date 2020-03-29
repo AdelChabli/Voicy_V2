@@ -1,0 +1,2 @@
+Pensez à faire cette commande sur le fichier
+sed -i 's/\r$//g' createPerl_logatome
