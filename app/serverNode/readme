@@ -1,2 +1,5 @@
 Pensez à faire cette commande sur le fichier
 sed -i 's/\r$//g' createPerl_logatome
+
+modifier commande logatome
+./bin/lia_plp_mt.32 --lst data/list.sph.lst --input_dir ./data/ --output_dir ./data/ --input_type SPHERE --output_type HTK --nb_coef 12 --cms
