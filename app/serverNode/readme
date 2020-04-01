@@ -1,5 +1,13 @@
-Pensez à faire cette commande sur le fichier
-sed -i 's/\r$//g' createPerl_logatome
+Pour un exercice de logatome :
+    -> 1er tu fais ton exercice en entier
+    -> 2eme tu vas dans le serveur et tu recupère tout le fichier 'save'
+    -> 3eme vider le dossier 'save' et tu peux refaire un exercice !
 
-modifier commande logatome
-./bin/lia_plp_mt.32 --lst data/list.sph.lst --input_dir ./data/ --output_dir ./data/ --input_type SPHERE --output_type HTK --nb_coef 12 --cms
+Pour un exercice de lecture:
+    -> 1er tu fais ton exercice
+    -> 2eme go sur le serveur ou la tu vas dans /script
+        Tu recupères le fichier file.wav ("écoute le pour voir si ta wav est bonne")
+        Apres go dans /data ou la tu vas recupéré file.scores.txt et file.phon.lbl
+        !! Ne supprime rien !!
+    -> 3eme associe tous les fichiers que tu viens de récupérer dans un dossier numéroté pour pas les melangés au prochain qui porteront le meme nom !
+    -> Et tu peux refaire un exercice...
