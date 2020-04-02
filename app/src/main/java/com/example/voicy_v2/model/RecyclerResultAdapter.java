@@ -67,7 +67,7 @@ public class RecyclerResultAdapter extends RecyclerView.Adapter<RecyclerResultAd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerResultAdapter.ResultViewHolder holder, final int position)
+    public void onBindViewHolder(@NonNull final RecyclerResultAdapter.ResultViewHolder holder, final int position)
     {
         ResultFile resultFile = listeResultat.get(position);
 
@@ -90,6 +90,7 @@ public class RecyclerResultAdapter extends RecyclerView.Adapter<RecyclerResultAd
             public void onClick(View view) {
                 Intent intent = new Intent(context, AffichageExerciceActivity.class);
                 intent.putExtra("resultat", listeResultat.get(position));
+                intent.putExtra("type", holder.logoResult.getText());
                 context.startActivity(intent);
             }
         });

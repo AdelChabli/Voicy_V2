@@ -66,6 +66,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
     private LayoutInflater inflater;
     private View customView;
     private int phraseIterator = 1;
+    private String typeExercice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -83,6 +84,10 @@ public class AffichageExerciceActivity extends AppCompatActivity
 
         // Permet de récuperer le paramètre envoyer par l'activité précédente
         resultFile = (ResultFile) getIntent().getSerializableExtra("resultat");
+        Bundle param = getIntent().getExtras();
+        typeExercice = param.getString("type");
+
+        LogVoicy.getInstance().createLogInfo("Type resultat = " + typeExercice);
 
         fileTXT = DirectoryManager.OUTPUT_RESULTAT + "/" + resultFile.getNameFile() + "/resultat.txt";
 
@@ -94,11 +99,13 @@ public class AffichageExerciceActivity extends AppCompatActivity
 
         List<String> element = new ArrayList<>();
 
+
+
         for(Logatome logatome : listeLogatome)
         {
-            element.add("phrase" + phraseIterator);
-            phraseIterator++;
+            element.add(logatome.getLogatomeName());
         }
+
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, element);
 
@@ -122,6 +129,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
                             mediaPlayer.start();
                     }
                 });
+
             }
         });
 
@@ -133,7 +141,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
 
         String path = "";
 
-        if(resultFile.getNameFile().substring(0,1).toLowerCase().equals("p"))
+        if(typeExercice.toLowerCase().equals("p"))
         {
             path = DirectoryManager.OUTPUT_RESULTAT + "/" + resultFile.getNameFile() + "/phrase" + (i+1) + ".wav";
         }
@@ -172,9 +180,9 @@ public class AffichageExerciceActivity extends AppCompatActivity
         // Configuration du titre
         titrePopUp = popUp.getContentView().findViewById(R.id.titrePopup);
 
-        if(resultFile.getNameFile().substring(0,1).toLowerCase().equals("p"))
+        if(typeExercice.toLowerCase().equals("p"))
         {
-            titrePopUp.setText("phrase n°" + (i+1));
+            titrePopUp.setText("Resultat");
         }
         else
         {
@@ -309,7 +317,17 @@ public class AffichageExerciceActivity extends AppCompatActivity
             LogVoicy.getInstance().createLogInfo(jsonObject.toString());
 
             try {
-                String name = jsonObject.getString("name");
+
+                String name = "";
+                if(typeExercice.toLowerCase().equals("p"))
+                {
+                    name = "résultat des phrases";
+                }
+                else
+                {
+                    name = jsonObject.getString("name");
+                }
+
                 name = name.substring(name.indexOf("/") + 1);
                 LogVoicy.getInstance().createLogInfo("NamePhoneme: " + name);
 
