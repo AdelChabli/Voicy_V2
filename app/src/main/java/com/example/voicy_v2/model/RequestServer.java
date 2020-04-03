@@ -66,8 +66,6 @@ public class RequestServer
 
     public void sendHttpsRequest(final HashMap<String, String> params, String type)
     {
-
-
         final ProgressDialog dialog = ProgressDialog.show(context, null, "Traitement de la parole en cours");
 
         RequestQueue requestQueue;
@@ -130,8 +128,6 @@ public class RequestServer
                 {
                     callbackServer.exercuceAfterErrorServer(error.toString());
                 }
-
-
             }
         }){
             @Override

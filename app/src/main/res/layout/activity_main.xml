@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
+    <Button
+        android:id="@+id/btn_attente"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="162dp"
+        android:layout_height="54dp"
+        android:background="#f39c12"
+        android:drawableLeft="@drawable/ic_warning_black_24dp"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:text="     ATTENTE"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include3" />
+
     <include
         android:id="@+id/include3"
         layout="@layout/toolbar" />
@@ -22,7 +37,7 @@
         app:layout_constraintEnd_toStartOf="@+id/btn_phoneme"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="#E46767"/>
+        android:background="#E46767" />
 
     <Button
         android:id="@+id/btn_phoneme"

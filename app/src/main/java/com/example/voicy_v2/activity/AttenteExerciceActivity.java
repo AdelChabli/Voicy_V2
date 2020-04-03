@@ -2,7 +2,6 @@ package com.example.voicy_v2.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,58 +9,60 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.voicy_v2.R;
+import com.example.voicy_v2.interfaces.CallbackServer;
 import com.example.voicy_v2.model.DirectoryManager;
+import com.example.voicy_v2.model.RecyclerAttenteAdapter;
 import com.example.voicy_v2.model.RecyclerResultAdapter;
 import com.example.voicy_v2.model.ResultFile;
 import com.example.voicy_v2.model.SortFileByCreationDate;
 import com.example.voicy_v2.model.SwipeHelper;
+import com.example.voicy_v2.model.SwipeHelperAttente;
+
+import org.json.JSONArray;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class ResultatActivity extends AppCompatActivity
+public class AttenteExerciceActivity extends AppCompatActivity
 {
     private RecyclerView recyclerView;
-    public static RecyclerResultAdapter rAdapter;
-    private List<ResultFile> listeFile;
-    private ResultFile resultFile;
+    public static RecyclerAttenteAdapter rAdapter;
     private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_resultat);
-
+        setContentView(R.layout.activity_attente_exercice);
         configOfToolbar();
 
-        listeFile = getAllResultFromAppFolder();
+        List<ResultFile> listeResult = getAllAttenteFromAppFolder();
 
-        recyclerView = findViewById(R.id.rvResultat);
+        recyclerView = findViewById(R.id.rv_attente);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        rAdapter = new RecyclerResultAdapter(this, listeFile);
+
+        rAdapter = new RecyclerAttenteAdapter(this, listeResult);
         recyclerView.setAdapter(rAdapter);
 
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        ItemTouchHelper.Callback callback = new SwipeHelper(this, rAdapter);
+        ItemTouchHelper.Callback callback = new SwipeHelperAttente(this, rAdapter);
         ItemTouchHelper helper = new ItemTouchHelper(callback);
         helper.attachToRecyclerView(recyclerView);
-
     }
 
     // Fonction permettant de récupérer tous dossier résultat et en les transformants en objet ResultFile
-    public List<ResultFile> getAllResultFromAppFolder()
+    public List<ResultFile> getAllAttenteFromAppFolder()
     {
         List<ResultFile> listResult = new ArrayList<>();
 
-        File[] dirs = SortFileByCreationDate.getInstance().getListSorted(DirectoryManager.OUTPUT_RESULTAT);
+        File[] dirs = SortFileByCreationDate.getInstance().getListSorted(DirectoryManager.OUTPUT_ATTENTE);
 
         for(int i = (dirs.length - 1); i >= 0; i--)
         {
@@ -70,7 +71,6 @@ public class ResultatActivity extends AppCompatActivity
 
         return listResult;
     }
-
 
     // ----------------------- SECTION TOOLBAR ET ACTION LORS DES BACK / CLIQUE ITEM MENU -----------------------------
 
@@ -88,7 +88,7 @@ public class ResultatActivity extends AppCompatActivity
 
         if(id == R.id.action_home)
         {
-            Intent i = new Intent(ResultatActivity.this,MainActivity.class);
+            Intent i = new Intent(AttenteExerciceActivity.this,MainActivity.class);
             startActivity(i);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             return true;
@@ -100,8 +100,6 @@ public class ResultatActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(ResultatActivity.this,MainActivity.class);
-        startActivity(i);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
@@ -117,6 +115,6 @@ public class ResultatActivity extends AppCompatActivity
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Resultat");
+        getSupportActionBar().setTitle("Exercice en attente");
     }
 }

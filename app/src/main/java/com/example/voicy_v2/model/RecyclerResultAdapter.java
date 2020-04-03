@@ -1,13 +1,11 @@
 package com.example.voicy_v2.model;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -16,9 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.voicy_v2.R;
 import com.example.voicy_v2.activity.AffichageExerciceActivity;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.voicy_v2.activity.MainActivity;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class RecyclerResultAdapter extends RecyclerView.Adapter<RecyclerResultAdapter.ResultViewHolder>
@@ -41,6 +38,14 @@ public class RecyclerResultAdapter extends RecyclerView.Adapter<RecyclerResultAd
         listeResultat.remove(position);
 
         notifyItemRemoved(position);
+
+        if(listeResultat.isEmpty())
+        {
+            Intent intent = new Intent(context, MainActivity.class);
+            ((Activity) context).startActivity(intent);
+            ((Activity) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            ((Activity) context).finish();
+        }
     }
 
     public class ResultViewHolder extends RecyclerView.ViewHolder

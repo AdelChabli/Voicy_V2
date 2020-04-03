@@ -162,32 +162,11 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
     public void executeAfterResponseServer(final JSONArray response)
     {
         new Handler(Looper.getMainLooper()).post(new Runnable(){
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void run()
             {
 
-                String pathResultat = exercice.getDirectoryPath()+"/resultat.txt";
-
-                File file = new File(pathResultat);
-                try {
-                    if(file.createNewFile())
-                    {
-                        LogVoicy.getInstance().createLogInfo("Fichier " + pathResultat + " créer avec succès");
-                    }
-                    else
-                    {
-                        LogVoicy.getInstance().createLogError("Fichier " + pathResultat + " non créer");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    Files.write(Paths.get(pathResultat), response.toString().getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                DirectoryManager.getInstance().createFileOnDirectory(exercice.getDirectoryPath(), "resultat.txt", params.toString());
 
                 Intent intent = new Intent(ExerciceActivity.this, ResultatActivity.class);
                 startActivity(intent);
@@ -201,7 +180,11 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
     @Override
     public void exercuceAfterErrorServer(String error)
     {
-        DirectoryManager.getInstance().rmdirFolder(exercice.getDirectoryPath());
+        DirectoryManager.getInstance().cutAndPastFolderToAnother(exercice.getDirectoryPath(), DirectoryManager.OUTPUT_ATTENTE);
+
+        String pathDestination = DirectoryManager.OUTPUT_ATTENTE + "/" + exercice.getDirectoryName();
+
+        DirectoryManager.getInstance().createFileOnDirectory(pathDestination, "temp.txt", params.toString());
 
         SweetAlertDialog sDialog = new SweetAlertDialog(ExerciceActivity.this, SweetAlertDialog.ERROR_TYPE);
         sDialog.setTitleText("Oups ...");

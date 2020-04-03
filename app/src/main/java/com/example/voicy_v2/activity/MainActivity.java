@@ -19,15 +19,15 @@ import com.example.voicy_v2.model.DirectoryManager;
 import com.example.voicy_v2.model.LogVoicy;
 import com.example.voicy_v2.model.ServerRequest;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity
 {
     private static final String TOOLBAR_TITLE = "Voicy";
 
     private ServerRequest requestPhoneme, requestPhrase;
 
-    private Button btn_phoneme;
-    private Button btn_sentence;
-    private Button btn_rslt;
+    private Button btn_phoneme, btn_rslt, btn_sentence, btn_attente;
     private Toolbar toolbar;
 
     @Override
@@ -36,16 +36,22 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        configOfToolbar();
-
-        DirectoryManager.getInstance().initProject();
-
-        btn_phoneme = findViewById(R.id.btn_phoneme);
-        btn_sentence = findViewById(R.id.btn_sentence);
-        btn_rslt = findViewById(R.id.btn_rslt);
-
         LogVoicy.getInstance().createLogInfo("Arriver sur l'activity MainActivity");
 
+        configOfToolbar();
+
+        // Créer l'architecture dossier de l'application (si cela n'est pas déjà fait)
+        DirectoryManager.getInstance().initProject();
+
+        // Initialise tous les boutons de la page
+        initialisationOfAllButton();
+
+        // Initialisation des listener on click des boutons de la page
+        initialisationOfAllButtonListener();
+    }
+
+    private void initialisationOfAllButtonListener()
+    {
         btn_phoneme.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 LogVoicy.getInstance().createLogInfo("Clique sur le bouton exercice phonème détecté");
@@ -77,6 +83,40 @@ public class MainActivity extends AppCompatActivity
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
+
+        btn_attente.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                LogVoicy.getInstance().createLogInfo("Clique sur le bouton attente détecté");
+                LogVoicy.getInstance().createLogInfo("Changement de page vers AttenteExerciceActivy");
+                Intent intent = new Intent(getApplicationContext(), AttenteExerciceActivity.class);
+                startActivityForResult(intent, 3);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }
+        });
+
+        File file = new File(DirectoryManager.OUTPUT_ATTENTE);
+        File[] list = file.listFiles();
+
+        if(list.length == 0)
+        {
+            btn_attente.setVisibility(View.INVISIBLE);
+        }
+
+        File file2 = new File(DirectoryManager.OUTPUT_RESULTAT);
+        File[] list2 = file2.listFiles();
+
+        if(list2.length == 0)
+        {
+            btn_rslt.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void initialisationOfAllButton()
+    {
+        btn_phoneme = findViewById(R.id.btn_phoneme);
+        btn_sentence = findViewById(R.id.btn_sentence);
+        btn_rslt = findViewById(R.id.btn_rslt);
+        btn_attente = findViewById(R.id.btn_attente);
     }
 
     @Override
@@ -97,6 +137,12 @@ public class MainActivity extends AppCompatActivity
         }
 
         if(requestCode == 2) {
+            if (resultCode == 0) {
+
+            }
+        }
+
+        if(requestCode == 3) {
             if (resultCode == 0) {
 
             }
