@@ -41,10 +41,8 @@ public class RecyclerResultAdapter extends RecyclerView.Adapter<RecyclerResultAd
 
         if(listeResultat.isEmpty())
         {
-            Intent intent = new Intent(context, MainActivity.class);
-            ((Activity) context).startActivity(intent);
-            ((Activity) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             ((Activity) context).finish();
+            ((Activity) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
     }
 
@@ -96,7 +94,8 @@ public class RecyclerResultAdapter extends RecyclerView.Adapter<RecyclerResultAd
                 Intent intent = new Intent(context, AffichageExerciceActivity.class);
                 intent.putExtra("resultat", listeResultat.get(position));
                 intent.putExtra("type", holder.logoResult.getText());
-                context.startActivity(intent);
+                ((Activity)context).startActivityForResult(intent, 0);
+                ((Activity)context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
     }

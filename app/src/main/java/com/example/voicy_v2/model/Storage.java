@@ -1,5 +1,6 @@
 package com.example.voicy_v2.model;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,7 +16,7 @@ public class Storage {
     public static String PHONE = DirectoryManager.OUTPUT_PHONE;
     public static String SENTENCE = DirectoryManager.OUTPUT_SENTENCE;
 
-    public static void store(JSONObject object, String path) throws JSONException, IOException {
+    public static void store(JSONArray object, String path) throws JSONException, IOException {
         File exo = new File(path,new Date().toString()+"txt"); // TODO modifier car léo pue
 
         exo.createNewFile();

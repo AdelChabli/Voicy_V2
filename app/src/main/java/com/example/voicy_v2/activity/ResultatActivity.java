@@ -16,6 +16,7 @@ import android.view.MenuItem;
 
 import com.example.voicy_v2.R;
 import com.example.voicy_v2.model.DirectoryManager;
+import com.example.voicy_v2.model.LogVoicy;
 import com.example.voicy_v2.model.RecyclerResultAdapter;
 import com.example.voicy_v2.model.ResultFile;
 import com.example.voicy_v2.model.SortFileByCreationDate;
@@ -71,6 +72,17 @@ public class ResultatActivity extends AppCompatActivity
         return listResult;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 0) {
+            if (resultCode == 0) {
+                finish();
+            }
+        }
+    }
+
 
     // ----------------------- SECTION TOOLBAR ET ACTION LORS DES BACK / CLIQUE ITEM MENU -----------------------------
 
@@ -88,8 +100,7 @@ public class ResultatActivity extends AppCompatActivity
 
         if(id == R.id.action_home)
         {
-            Intent i = new Intent(ResultatActivity.this,MainActivity.class);
-            startActivity(i);
+            finish();
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             return true;
         }
@@ -100,8 +111,7 @@ public class ResultatActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(ResultatActivity.this,MainActivity.class);
-        startActivity(i);
+        finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 

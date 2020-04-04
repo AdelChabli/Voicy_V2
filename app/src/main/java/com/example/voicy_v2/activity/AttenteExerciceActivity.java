@@ -88,8 +88,7 @@ public class AttenteExerciceActivity extends AppCompatActivity
 
         if(id == R.id.action_home)
         {
-            Intent i = new Intent(AttenteExerciceActivity.this,MainActivity.class);
-            startActivity(i);
+            finish();
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             return true;
         }
@@ -100,7 +99,9 @@ public class AttenteExerciceActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
     }
 
     @Override

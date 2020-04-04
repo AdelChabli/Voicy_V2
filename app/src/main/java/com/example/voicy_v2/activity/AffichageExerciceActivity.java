@@ -404,8 +404,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
 
         if(id == R.id.action_home)
         {
-            Intent i = new Intent(AffichageExerciceActivity.this,MainActivity.class);
-            startActivity(i);
+            finish();
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             return true;
         }

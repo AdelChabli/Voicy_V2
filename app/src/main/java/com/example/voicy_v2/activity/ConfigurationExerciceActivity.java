@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.voicy_v2.R;
+import com.example.voicy_v2.model.LogVoicy;
 import com.szagurskii.patternedtextwatcher.PatternedTextWatcher;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -79,7 +80,7 @@ public class ConfigurationExerciceActivity extends AppCompatActivity
                         intent.putExtra("type", typeExercice);
                         intent.putExtra("genre", genre);
                         intent.putExtra("iteration", iteration);
-                        startActivity(intent);
+                        startActivityForResult(intent, 0);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
                 }
@@ -135,6 +136,17 @@ public class ConfigurationExerciceActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 0) {
+            if (resultCode == 0) {
+                finish();
+            }
+        }
     }
 
     @Override

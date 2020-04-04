@@ -105,7 +105,7 @@ public class RequestServer
                     JSONArray array = new JSONArray(response);
                     callbackServer.executeAfterResponseServer(array);
 
-                    Storage.store(new JSONObject(response), Storage.PHONE);
+                    Storage.store(new JSONArray(response), Storage.PHONE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

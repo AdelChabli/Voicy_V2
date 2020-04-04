@@ -61,10 +61,8 @@ public class RecyclerAttenteAdapter extends RecyclerView.Adapter<RecyclerAttente
 
         if(listeResultat.isEmpty())
         {
-            Intent intent = new Intent(context, MainActivity.class);
-            ((Activity) context).startActivity(intent);
-            ((Activity) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             ((Activity) context).finish();
+            ((Activity) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
     }
 

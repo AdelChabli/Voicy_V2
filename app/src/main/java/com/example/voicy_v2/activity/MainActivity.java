@@ -100,12 +100,21 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        testAttenteResultatFichier();
+    }
+
+    private void testAttenteResultatFichier()
+    {
         File file = new File(DirectoryManager.OUTPUT_ATTENTE);
         File[] list = file.listFiles();
 
         if(list.length == 0)
         {
             btn_attente.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            btn_attente.setVisibility(View.VISIBLE);
         }
 
         File file2 = new File(DirectoryManager.OUTPUT_RESULTAT);
@@ -114,6 +123,10 @@ public class MainActivity extends AppCompatActivity
         if(list2.length == 0)
         {
             btn_rslt.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            btn_rslt.setVisibility(View.VISIBLE);
         }
     }
 
@@ -132,25 +145,29 @@ public class MainActivity extends AppCompatActivity
 
         if(requestCode == 0) {
             if (resultCode == 0) {
-
+                LogVoicy.getInstance().createLogInfo("Result 0");
+                testAttenteResultatFichier();
             }
         }
 
         if(requestCode == 1) {
             if (resultCode == 0) {
-
+                LogVoicy.getInstance().createLogInfo("Result 1");
+                testAttenteResultatFichier();
             }
         }
 
         if(requestCode == 2) {
             if (resultCode == 0) {
-
+                LogVoicy.getInstance().createLogInfo("Result 2");
+                testAttenteResultatFichier();
             }
         }
 
         if(requestCode == 3) {
             if (resultCode == 0) {
-
+                LogVoicy.getInstance().createLogInfo("Result 3");
+                testAttenteResultatFichier();
             }
         }
     }

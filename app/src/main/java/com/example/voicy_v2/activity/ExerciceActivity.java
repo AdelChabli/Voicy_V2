@@ -196,14 +196,12 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
             @Override
             public void onClick(SweetAlertDialog sDialog) {
                 sDialog.dismissWithAnimation();
-                Intent intent = new Intent(ExerciceActivity.this, MainActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                finish();
+                //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
         sDialog.show();
     }
-
 
     public void initAllButton()
     {
@@ -362,9 +360,10 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
                     {
                         sDialog.dismissWithAnimation();
                         DirectoryManager.getInstance().rmdirFolder(exercice.getDirectoryPath());
-                        Intent intent = new Intent(ExerciceActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        //Intent intent = new Intent(ExerciceActivity.this, MainActivity.class);
+                        //startActivity(intent);
+                        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        finish();
                     }
                 })
                 .setCancelButton("Non", new cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener() {
