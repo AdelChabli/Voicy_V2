@@ -163,7 +163,7 @@ public class RecyclerAttenteAdapter extends RecyclerView.Adapter<RecyclerAttente
 
         paramString = paramString.substring(1);
         paramString = paramString.substring(0, paramString.length() - 1);
-        paramString = paramString.replaceAll(" ", "");
+        paramString = paramString.replaceAll(", ", ",");
 
         LogVoicy.getInstance().createLogInfo(paramString);
 
