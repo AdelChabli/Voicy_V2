@@ -107,7 +107,7 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
         {
             lePrompteur.setTextSize(46);
 
-            exercice = new ExerciceLogatome(maxIteration, this);
+            exercice = new ExerciceLogatome(maxIteration, genre,this);
 
             record = new Recorder(this, exercice.getDirectoryPath());
 
@@ -117,7 +117,7 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
         {
             lePrompteur.setTextSize(38);
 
-            exercice = new ExercicePhrase(maxIteration, this);
+            exercice = new ExercicePhrase(maxIteration, genre,this);
 
             record = new Recorder(this, exercice.getDirectoryPath());
 

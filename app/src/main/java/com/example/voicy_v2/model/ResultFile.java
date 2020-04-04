@@ -10,6 +10,7 @@ public class ResultFile implements Serializable
     private String nameFile;
     private String date;
     private String hour;
+    private String genre;
 
     public ResultFile(String name)
     {
@@ -18,16 +19,17 @@ public class ResultFile implements Serializable
         formatDataFromNameFolder();
     }
 
-    public ResultFile(String name, String d, String h)
+    public ResultFile(String name, String d, String h, String g)
     {
         this.nameFile = name;
         this.date = d;
         this.hour = h;
+        this.genre = g;
     }
 
     private void formatDataFromNameFolder()
     {
-        String laDate = "" , lheure = "";
+        String laDate = "" , lheure = "", leGenre = "";
 
         String chaine = this.nameFile;
 
@@ -41,11 +43,9 @@ public class ResultFile implements Serializable
                 chaine.substring(chaine.indexOf("_") + 3, chaine.indexOf("_") + 5) + ":" +
                 chaine.substring(chaine.indexOf("_") + 5, chaine.indexOf("_") + 7);
 
-        //Log.d("listResult", laDate);
-        //Log.d("listResult", lheure);
-
         this.date = laDate;
         this.hour = lheure;
+        this.genre = chaine.substring(chaine.lastIndexOf("_") + 1);
 
     }
 
@@ -71,5 +71,13 @@ public class ResultFile implements Serializable
 
     public void setHour(String hour) {
         this.hour = hour;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 }

@@ -19,10 +19,11 @@ public class ExerciceLogatome extends Exercice
 {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public ExerciceLogatome(int nb, Context c)
+    public ExerciceLogatome(int nb, String leGenre, Context c)
     {
         super(c);
         totalIteration = nb;
+        genre = leGenre;
 
         // Va récuperer les nonmots de la liste
         recupereElementExercice("lexique_phone.AA4");
@@ -74,6 +75,8 @@ public class ExerciceLogatome extends Exercice
         String currentDateandTime = sdf.format(new Date());
 
         direcName += currentDateandTime;
+
+        direcName += "_" + genre;
 
         //Log.d("logATOM", "Directory : " + direcName);
 

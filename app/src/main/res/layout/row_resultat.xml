@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="68dp"
     android:layout_margin="4dp"
     android:id="@+id/linLayout"
     >
@@ -16,10 +16,10 @@
 
         <Button
             android:id="@+id/buttonType"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:text="L"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textColor="#FFF"
             android:background="@drawable/button_record"/>
     </RelativeLayout>
@@ -82,6 +82,31 @@
             android:textSize="15sp"
             app:layout_constraintStart_toEndOf="@+id/textDate"
             app:layout_constraintTop_toBottomOf="@+id/txtDate" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="1dp"
+            android:text="Genre :"
+            android:textStyle="bold"
+            android:textColor="#202020"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textDate" />
+
+        <TextView
+            android:id="@+id/txtGenre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="1dp"
+            android:text="Homme"
+            android:textColor="#202020"
+            android:textSize="15sp"
+            app:layout_constraintStart_toEndOf="@+id/textView3"
+            app:layout_constraintTop_toBottomOf="@+id/txtHour" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

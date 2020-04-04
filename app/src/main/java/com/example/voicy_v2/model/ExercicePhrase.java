@@ -11,11 +11,12 @@ import java.util.Date;
 // TODO A implementer
 public class ExercicePhrase extends Exercice
 {
-    public ExercicePhrase(int nb, Context c)
+    public ExercicePhrase(int nb, String leGenre, Context c)
     {
         super(c);
 
         totalIteration = nb;
+        genre = leGenre;
 
         // Va récupérer les phrases
         recupereElementExercice("chevre.txt");
@@ -69,6 +70,8 @@ public class ExercicePhrase extends Exercice
         String currentDateandTime = sdf.format(new Date());
 
         direcName += currentDateandTime;
+
+        direcName += "_" + genre;
 
         return direcName;
     }

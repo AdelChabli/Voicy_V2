@@ -8,6 +8,7 @@ public abstract class Exercice
 {
     protected int totalIteration;
     protected int actuelIteration;
+    protected String genre;
     protected ArrayList<Mot> listeElement;
     protected Context context;
     protected String directoryName;
@@ -61,4 +62,12 @@ public abstract class Exercice
 
     // Renvoie le chemin complet vers le dossier de l'exercice se trouvant dans resultat
     public String getDirectoryPath() { return DirectoryManager.OUTPUT_RESULTAT + "/" + directoryName;}
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
 }

@@ -48,7 +48,7 @@ public class RecyclerResultAdapter extends RecyclerView.Adapter<RecyclerResultAd
 
     public class ResultViewHolder extends RecyclerView.ViewHolder
     {
-        public TextView laDate, lheure;
+        public TextView laDate, lheure, leGenre;
         public Button logoResult;
 
         public ResultViewHolder(@NonNull View itemView)
@@ -57,6 +57,7 @@ public class RecyclerResultAdapter extends RecyclerView.Adapter<RecyclerResultAd
 
             laDate = itemView.findViewById(R.id.txtDate);
             lheure = itemView.findViewById(R.id.txtHour);
+            leGenre = itemView.findViewById(R.id.txtGenre);
             logoResult = itemView.findViewById(R.id.buttonType);
         }
     }
@@ -87,6 +88,7 @@ public class RecyclerResultAdapter extends RecyclerView.Adapter<RecyclerResultAd
 
         holder.laDate.setText(resultFile.getDate());
         holder.lheure.setText(resultFile.getHour());
+        holder.leGenre.setText(resultFile.getGenre());
 
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
