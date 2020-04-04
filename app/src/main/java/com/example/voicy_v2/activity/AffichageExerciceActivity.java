@@ -425,7 +425,6 @@ public class AffichageExerciceActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         setResult(1);
         finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
