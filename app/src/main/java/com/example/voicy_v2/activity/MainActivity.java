@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.voicy_v2.R;
 import com.example.voicy_v2.interfaces.CallbackServer;
@@ -29,12 +30,17 @@ public class MainActivity extends AppCompatActivity
 
     private Button btn_phoneme, btn_rslt, btn_sentence, btn_attente;
     private Toolbar toolbar;
+    private ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Bug tablette le backgroudn color devient noir alors je le repasse blanc
+        constraintLayout = findViewById(R.id.mainLayout);
+        constraintLayout.setBackgroundColor(Color.WHITE);
 
         LogVoicy.getInstance().createLogInfo("Arriver sur l'activity MainActivity");
 
