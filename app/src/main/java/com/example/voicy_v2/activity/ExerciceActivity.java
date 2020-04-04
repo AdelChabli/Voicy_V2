@@ -166,7 +166,7 @@ public class ExerciceActivity extends AppCompatActivity implements CallbackServe
             public void run()
             {
 
-                DirectoryManager.getInstance().createFileOnDirectory(exercice.getDirectoryPath(), "resultat.txt", params.toString());
+                DirectoryManager.getInstance().createFileOnDirectory(exercice.getDirectoryPath(), "resultat.txt", response.toString());
 
                 Intent intent = new Intent(ExerciceActivity.this, ResultatActivity.class);
                 startActivity(intent);

@@ -53,16 +53,8 @@ public class SortFileByCreationDate
         return dirs;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private long getDirCreationDate(File dir)
     {
-        try
-        {
-            BasicFileAttributes attr = Files.readAttributes(dir.toPath(), BasicFileAttributes.class);
-            return attr.creationTime().toInstant().toEpochMilli();
-        } catch (IOException e) {
-            throw new RuntimeException(dir.getAbsolutePath(), e);
-        }
-
+        return dir.lastModified();
     }
 }
