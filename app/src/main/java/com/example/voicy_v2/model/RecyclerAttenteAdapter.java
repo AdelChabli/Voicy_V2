@@ -1,6 +1,7 @@
 package com.example.voicy_v2.model;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -30,6 +31,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 
@@ -126,7 +130,40 @@ public class RecyclerAttenteAdapter extends RecyclerView.Adapter<RecyclerAttente
                             public void onClick(cn.pedant.SweetAlert.SweetAlertDialog sDialog)
                             {
                                 sDialog.dismissWithAnimation();
-                                traitementOnItemClick();
+
+                                final ProgressDialog dialog = ProgressDialog.show(context, null, "Préparation des données à envoyer ...");
+
+                                new Thread(new Runnable() {
+                                    public void run()
+                                    {
+                                        // Récupère la hashmap de donnée
+                                        final HashMap<String,String> params = traitementOnItemClick();
+
+                                        // Dismiss sur l'UI le progressDialog
+                                        ((Activity)context).runOnUiThread(new Runnable() {
+                                            public void run() {
+                                                dialog.dismiss();
+                                            }
+                                        });
+
+                                        ((Activity)context).runOnUiThread(new Runnable()
+                                        {
+                                            public void run()
+                                            {
+                                                RequestServer requestLogatome = new RequestServer(context, callbackServer);
+
+                                                if(exerciceSelected.getNameFile().toLowerCase().contains("p"))
+                                                {
+                                                    requestLogatome.sendHttpsRequest(params, "phrase");
+                                                }
+                                                else
+                                                {
+                                                    requestLogatome.sendHttpsRequest(params, "logatome");
+                                                }
+                                            }
+                                        });
+                                    }
+                                }).start();
                             }
                         })
                         .setCancelButton("Non", new cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener() {
@@ -140,7 +177,7 @@ public class RecyclerAttenteAdapter extends RecyclerView.Adapter<RecyclerAttente
         });
     }
 
-    private void traitementOnItemClick()
+    private HashMap<String, String> traitementOnItemClick()
     {
         String sourceDirectory = DirectoryManager.OUTPUT_ATTENTE + "/" + exerciceSelected.getNameFile();
 
@@ -158,6 +195,8 @@ public class RecyclerAttenteAdapter extends RecyclerView.Adapter<RecyclerAttente
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
 
         LogVoicy.getInstance().createLogInfo(paramString);
 
@@ -182,16 +221,7 @@ public class RecyclerAttenteAdapter extends RecyclerView.Adapter<RecyclerAttente
         LogVoicy.getInstance().createLogInfo(params.get("gender"));
         LogVoicy.getInstance().createLogInfo(params.get("type"));
 
-        RequestServer requestLogatome = new RequestServer(context, callbackServer);
-
-        if(exerciceSelected.getNameFile().toLowerCase().contains("p"))
-        {
-            requestLogatome.sendHttpsRequest(params, "phrase");
-        }
-        else
-        {
-            requestLogatome.sendHttpsRequest(params, "logatome");
-        }
+        return params;
     }
 
     @Override

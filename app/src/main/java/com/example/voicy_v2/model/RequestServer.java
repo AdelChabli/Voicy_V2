@@ -66,7 +66,7 @@ public class RequestServer
 
     public void sendHttpsRequest(final HashMap<String, String> params, String type)
     {
-        final ProgressDialog dialog = ProgressDialog.show(context, null, "Traitement de la parole en cours");
+        final ProgressDialog dialog = ProgressDialog.show(context, null, "Traitement de la parole en cours ...");
 
         RequestQueue requestQueue;
 
