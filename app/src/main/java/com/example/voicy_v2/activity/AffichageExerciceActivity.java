@@ -67,6 +67,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
     private View customView;
     private int phraseIterator = 1;
     private String typeExercice;
+    private boolean popupOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -78,6 +79,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
 
         listView = findViewById(R.id.listeElement);
         rLayout = findViewById(R.id.const_layout);
+        mediaPlayer = new MediaPlayer();
         // Initialisation
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         customView = inflater.inflate(R.layout.popup_resultat,null);
@@ -116,9 +118,14 @@ public class AffichageExerciceActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
             {
-                showResultat(listeLogatome.get(i), i);
+                if(!popupOpen)
+                {
+                    showResultat(listeLogatome.get(i), i);
 
-                chargerWav(adapterView, i);
+                    popupOpen = true;
+
+                    chargerWav(adapterView, i);
+                }
 
                 btnEcouter = customView.findViewById(R.id.btnEcouterResultat);
                 btnEcouter.setOnClickListener(new View.OnClickListener() {
@@ -126,10 +133,12 @@ public class AffichageExerciceActivity extends AppCompatActivity
                     public void onClick(View view)
                     {
                         if(!mediaPlayer.isPlaying())
+                        {
                             mediaPlayer.start();
+                        }
+
                     }
                 });
-
             }
         });
 
@@ -137,7 +146,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
 
     private void chargerWav(AdapterView<?> parent, int i)
     {
-        mediaPlayer = new MediaPlayer();
+        mediaPlayer.reset();
 
         String path = "";
 
@@ -203,6 +212,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
             public void onClick(View view) {
                 popUp.dismiss();
                 mediaPlayer.stop();
+                popupOpen = false;
             }
         });
 
@@ -210,6 +220,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
             @Override
             public void onDismiss() {
                 mediaPlayer.stop();
+                popupOpen = false;
             }
         });
     }
@@ -415,11 +426,14 @@ public class AffichageExerciceActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        setResult(1);
+        finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override
     public boolean onSupportNavigateUp() {
+        setResult(1);
         finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         return true;

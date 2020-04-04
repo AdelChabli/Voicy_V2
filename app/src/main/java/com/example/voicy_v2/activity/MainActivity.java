@@ -145,28 +145,24 @@ public class MainActivity extends AppCompatActivity
 
         if(requestCode == 0) {
             if (resultCode == 0) {
-                LogVoicy.getInstance().createLogInfo("Result 0");
                 testAttenteResultatFichier();
             }
         }
 
         if(requestCode == 1) {
             if (resultCode == 0) {
-                LogVoicy.getInstance().createLogInfo("Result 1");
                 testAttenteResultatFichier();
             }
         }
 
         if(requestCode == 2) {
             if (resultCode == 0) {
-                LogVoicy.getInstance().createLogInfo("Result 2");
                 testAttenteResultatFichier();
             }
         }
 
         if(requestCode == 3) {
             if (resultCode == 0) {
-                LogVoicy.getInstance().createLogInfo("Result 3");
                 testAttenteResultatFichier();
             }
         }
