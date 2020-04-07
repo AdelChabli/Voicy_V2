@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.voicy_v2.R;
 import com.example.voicy_v2.interfaces.CallbackServer;
@@ -23,6 +24,7 @@ import com.example.voicy_v2.model.ResultFile;
 import com.example.voicy_v2.model.SortFileByCreationDate;
 import com.example.voicy_v2.model.SwipeHelper;
 import com.example.voicy_v2.model.SwipeHelperAttente;
+import com.example.voicy_v2.services.ServiceTraitementExercice;
 
 import org.json.JSONArray;
 
@@ -70,6 +72,13 @@ public class AttenteExerciceActivity extends AppCompatActivity
         }
 
         return listResult;
+    }
+
+    public void startTraitementService(View v)
+    {
+        Intent serviceIntent = new Intent(this, ServiceTraitementExercice.class);
+        startService(serviceIntent);
+        finish();
     }
 
     // ----------------------- SECTION TOOLBAR ET ACTION LORS DES BACK / CLIQUE ITEM MENU -----------------------------

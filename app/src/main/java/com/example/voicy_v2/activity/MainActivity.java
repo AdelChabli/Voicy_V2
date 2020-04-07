@@ -15,12 +15,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.voicy_v2.R;
-import com.example.voicy_v2.interfaces.CallbackServer;
 import com.example.voicy_v2.model.DirectoryManager;
 import com.example.voicy_v2.model.LogVoicy;
 import com.example.voicy_v2.model.ServerRequest;
-
 import java.io.File;
+
+import static com.example.voicy_v2.services.ServiceTraitementExercice.WORKING_ON;
+
 
 public class MainActivity extends AppCompatActivity
 {
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity
         File file = new File(DirectoryManager.OUTPUT_ATTENTE);
         File[] list = file.listFiles();
 
-        if(list.length == 0)
+        if(list.length == 0 || WORKING_ON)
         {
             btn_attente.setVisibility(View.INVISIBLE);
         }

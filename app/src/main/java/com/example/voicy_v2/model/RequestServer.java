@@ -139,6 +139,80 @@ public class RequestServer
 
         requestQueue.add(stringRequest);
     }
+
+    public void sendHttpsRequestService(final HashMap<String, String> params, String type)
+    {
+
+        RequestQueue requestQueue;
+
+        // Instantiate the cache
+        Cache cache = new DiskBasedCache(context.getCacheDir(), 1024 * 1024); // 100MB cap
+
+        HurlStack hurlStack = new HurlStack() {
+            @Override
+            protected HttpURLConnection createConnection(URL url) throws IOException {
+                HttpsURLConnection httpsURLConnection = (HttpsURLConnection) super.createConnection(url);
+                try {
+                    httpsURLConnection.setSSLSocketFactory(getSSLSocketFactory());
+                    httpsURLConnection.setHostnameVerifier(getHostnameVerifier());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return httpsURLConnection;
+            }
+        };
+
+        // Set up the network to use HttpURLConnection as the HTTP client.
+        Network network = new BasicNetwork(hurlStack);
+
+        // Instantiate the RequestQueue with the cache and network.
+        requestQueue = new RequestQueue(cache, network);
+
+        // Start the queue
+        requestQueue.start();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_REQUEST, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response)
+            {
+                LogVoicy.getInstance().createLogInfo(response);
+                try {
+                    JSONArray array = new JSONArray(response);
+                    callbackServer.executeAfterResponseServer(array);
+
+                    Storage.store(new JSONArray(response), Storage.PHONE);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+                LogVoicy.getInstance().createLogError(error.toString());
+
+                if(error.networkResponse == null)
+                {
+                    callbackServer.exercuceAfterErrorServer("Impossible d'intéragir avec le serveur, vérifier votre connexion internet ou bien le serveur n'est plus disponible.");
+                }
+                else
+                {
+                    callbackServer.exercuceAfterErrorServer(error.toString());
+                }
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(TIMEOUT,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        requestQueue.add(stringRequest);
+    }
+
     private HostnameVerifier getHostnameVerifier() {
         return new HostnameVerifier() {
             @Override

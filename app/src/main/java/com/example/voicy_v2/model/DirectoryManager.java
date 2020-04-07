@@ -83,6 +83,7 @@ public class DirectoryManager
         if (!file.exists())
             file.mkdir();
     }
+
     public void rmdirFolder(String path)
     {
         File file = new File(path);
