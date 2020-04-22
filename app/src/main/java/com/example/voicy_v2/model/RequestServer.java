@@ -21,12 +21,12 @@ import com.example.voicy_v2.interfaces.CallbackServer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -117,7 +117,8 @@ public class RequestServer
             @Override
             public void onErrorResponse(VolleyError error)
             {
-                LogVoicy.getInstance().createLogError(error.toString());
+                String responseBody = new String(error.networkResponse.data, StandardCharsets.UTF_8);
+                LogVoicy.getInstance().createLogError(responseBody);
                 dialog.dismiss();
 
                 if(error.networkResponse == null)
@@ -126,7 +127,7 @@ public class RequestServer
                 }
                 else
                 {
-                    callbackServer.exercuceAfterErrorServer(error.toString());
+                    callbackServer.exercuceAfterErrorServer(responseBody);
                 }
             }
         }){
