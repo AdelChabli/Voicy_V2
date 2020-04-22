@@ -117,8 +117,12 @@ public class RequestServer
             @Override
             public void onErrorResponse(VolleyError error)
             {
-                String responseBody = new String(error.networkResponse.data, StandardCharsets.UTF_8);
-                LogVoicy.getInstance().createLogError(responseBody);
+                String responseBody = null;
+                if(error.networkResponse != null)
+                {
+                    responseBody = new String(error.networkResponse.data, StandardCharsets.UTF_8);
+                }
+
                 dialog.dismiss();
 
                 if(error.networkResponse == null)
@@ -127,6 +131,7 @@ public class RequestServer
                 }
                 else
                 {
+                    LogVoicy.getInstance().createLogError(responseBody);
                     callbackServer.exercuceAfterErrorServer(responseBody);
                 }
             }
