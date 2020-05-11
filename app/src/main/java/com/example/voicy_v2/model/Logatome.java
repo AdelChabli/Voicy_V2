@@ -42,4 +42,9 @@ public class Logatome
     public void setScoreNonContraint(String scoreNonContraint) {
         this.scoreNonContraint = scoreNonContraint;
     }
+
+
+    public String getScoreContraint() {
+        return scoreContraint;
+    }
 }

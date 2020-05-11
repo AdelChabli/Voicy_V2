@@ -99,15 +99,29 @@ public class AffichageExerciceActivity extends AppCompatActivity
         // Permet de remplir la liste de logatome
         getAllElement();
 
+        // Permet d'ajouter un score globale qui fait un recap de tous les autres phonemes
+        if(typeExercice.toLowerCase().equals("l"))
+        {
+            double avgScoreContraint = getAvgScoreContraint(listeLogatome);
+            double avgScoreNonContraint = getAvgScoreNonContraint(listeLogatome);
+            Logatome globale = new Logatome("Résultats globaux", String.valueOf(avgScoreNonContraint), String.valueOf(avgScoreContraint));
+
+            for(Logatome logatome : listeLogatome)
+            {
+                Phoneme phoneme = getGlobalFormatedPhoneme(logatome);
+                globale.addPhoneme(phoneme.getPhoneme(), phoneme.getDebut(), phoneme.getFin(), phoneme.getScoreContraint(), phoneme.getScoreNonContraint());
+            }
+
+            listeLogatome.add(globale);
+
+        }
+
         List<String> element = new ArrayList<>();
-
-
 
         for(Logatome logatome : listeLogatome)
         {
             element.add(logatome.getLogatomeName());
         }
-
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, element);
 
@@ -128,6 +142,16 @@ public class AffichageExerciceActivity extends AppCompatActivity
                 }
 
                 btnEcouter = customView.findViewById(R.id.btnEcouterResultat);
+
+                if(typeExercice.toLowerCase().equals("l"))
+                {
+                    if(i == (listeLogatome.size() - 1))
+                    {
+                        btnEcouter.setVisibility(View.INVISIBLE);
+                    }
+                }
+
+
                 btnEcouter.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view)
@@ -142,6 +166,51 @@ public class AffichageExerciceActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    private Phoneme getGlobalFormatedPhoneme(Logatome logatome)
+    {
+        String name = logatome.getLogatomeName();
+
+        int nbPhoneme = logatome.getListePhoneme().size();
+
+        String debut = logatome.getListePhoneme().get(0).getDebut();
+        String fin = logatome.getListePhoneme().get(nbPhoneme - 1).getFin();
+
+        String scoreContraint = logatome.getScoreContraint();
+        String scoreNonContraint = logatome.getScoreNonContraint();
+
+        return new Phoneme(name, debut, fin, scoreContraint, scoreNonContraint);
+    }
+
+    private double getAvgScoreContraint(List<Logatome> listeLogatome)
+    {
+        int nbLog = listeLogatome.size();
+        double additionScore = 0.00;
+        for(Logatome l : listeLogatome)
+        {
+            additionScore += Double.parseDouble(l.getScoreContraint());
+        }
+
+        double avgScore = additionScore / nbLog;
+        avgScore = Math.round(avgScore * 100.0) / 100.0;
+
+        return avgScore;
+    }
+
+    private double getAvgScoreNonContraint(List<Logatome> listeLogatome)
+    {
+        int nbLog = listeLogatome.size();
+        double additionScore = 0.00;
+        for(Logatome l : listeLogatome)
+        {
+            additionScore += Double.parseDouble(l.getScoreNonContraint());
+        }
+
+        double avgScore = additionScore / nbLog;
+        avgScore = Math.round(avgScore * 100.0) / 100.0;
+
+        return avgScore;
     }
 
     private void chargerWav(AdapterView<?> parent, int i)
@@ -200,7 +269,7 @@ public class AffichageExerciceActivity extends AppCompatActivity
 
 
         // Configuration des lignes du tableau
-        addRowAndColumn(logatome.getListePhoneme(), logatome.getScoreNonContraint());
+        addRowAndColumn(logatome.getListePhoneme(), logatome.getScoreContraint());
 
         // Faire apparaitre la popup
         popUp.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -361,7 +430,11 @@ public class AffichageExerciceActivity extends AppCompatActivity
                     String start = ligneJSONObject.getString("start");
                     String end = ligneJSONObject.getString("end");
 
-                    logatome.addPhoneme(phonemeName, start, end,String.valueOf(phoneAC),  String.valueOf(phoneNC));
+                    double realEnd = Double.parseDouble(start) + Double.parseDouble(end);
+                    realEnd = Math.round(realEnd * 100.0) / 100.0;
+
+
+                    logatome.addPhoneme(phonemeName, start, String.valueOf(realEnd),String.valueOf(phoneAC),  String.valueOf(phoneNC));
 
                     LogVoicy.getInstance().createLogInfo(logatome.getListePhoneme().get(i).getPhonemeToString());
                 }

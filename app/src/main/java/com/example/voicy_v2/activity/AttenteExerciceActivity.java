@@ -32,6 +32,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class AttenteExerciceActivity extends AppCompatActivity
 {
     private RecyclerView recyclerView;
@@ -76,9 +78,19 @@ public class AttenteExerciceActivity extends AppCompatActivity
 
     public void startTraitementService(View v)
     {
-        Intent serviceIntent = new Intent(this, ServiceTraitementExercice.class);
-        startService(serviceIntent);
-        finish();
+        if(DirectoryManager.getInstance().getAvailableMo() > 100)
+        {
+            Intent serviceIntent = new Intent(this, ServiceTraitementExercice.class);
+            startService(serviceIntent);
+            finish();
+        }
+        else
+        {
+            new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Plus assez de place disponible")
+                    .setContentText("Il faut 100 Mo minimum disponible pour lancer un traitement. Veuillez en libérer pour pouvoir lancer un traitement.")
+                    .show();
+        }
     }
 
     // ----------------------- SECTION TOOLBAR ET ACTION LORS DES BACK / CLIQUE ITEM MENU -----------------------------
