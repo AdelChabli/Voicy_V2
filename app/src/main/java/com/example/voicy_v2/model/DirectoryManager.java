@@ -1,6 +1,7 @@
 package com.example.voicy_v2.model;
 
 import android.os.Environment;
+import android.os.StatFs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -158,6 +159,18 @@ public class DirectoryManager
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getAvailableMo()
+    {
+        StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
+
+        long bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
+        long megAvailable   = bytesAvailable / 1048576;
+
+        LogVoicy.getInstance().createLogInfo("Mo disponible = " + (int)megAvailable);
+
+        return (int)megAvailable;
     }
 
 

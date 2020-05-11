@@ -118,61 +118,72 @@ public class RecyclerAttenteAdapter extends RecyclerView.Adapter<RecyclerAttente
             @Override
             public void onClick(View view)
             {
-                exerciceSelected = listeResultat.get(position);
-                currentPositionExercice = position;
+                if(DirectoryManager.getInstance().getAvailableMo() > 100)
+                {
+                    exerciceSelected = listeResultat.get(position);
+                    currentPositionExercice = position;
 
-                new cn.pedant.SweetAlert.SweetAlertDialog(((Activity) context), cn.pedant.SweetAlert.SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Êtes-vous sûr ?")
-                        .setContentText("Voulez-vous traiter cette exercice ?")
-                        .setConfirmText("Oui")
-                        .setConfirmClickListener(new cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(cn.pedant.SweetAlert.SweetAlertDialog sDialog)
-                            {
-                                sDialog.dismissWithAnimation();
+                    new cn.pedant.SweetAlert.SweetAlertDialog(((Activity) context), cn.pedant.SweetAlert.SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Êtes-vous sûr ?")
+                            .setContentText("Voulez-vous traiter cette exercice ?")
+                            .setConfirmText("Oui")
+                            .setConfirmClickListener(new cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(cn.pedant.SweetAlert.SweetAlertDialog sDialog)
+                                {
+                                    sDialog.dismissWithAnimation();
 
-                                final ProgressDialog dialog = ProgressDialog.show(context, null, "Préparation des données à envoyer ...");
+                                    final ProgressDialog dialog = ProgressDialog.show(context, null, "Préparation des données à envoyer ...");
 
-                                new Thread(new Runnable() {
-                                    public void run()
-                                    {
-                                        // Récupère la hashmap de donnée
-                                        final HashMap<String,String> params = traitementOnItemClick();
-
-                                        // Dismiss sur l'UI le progressDialog
-                                        ((Activity)context).runOnUiThread(new Runnable() {
-                                            public void run() {
-                                                dialog.dismiss();
-                                            }
-                                        });
-
-                                        ((Activity)context).runOnUiThread(new Runnable()
+                                    new Thread(new Runnable() {
+                                        public void run()
                                         {
-                                            public void run()
-                                            {
-                                                RequestServer requestLogatome = new RequestServer(context, callbackServer);
+                                            // Récupère la hashmap de donnée
+                                            final HashMap<String,String> params = traitementOnItemClick();
 
-                                                if(exerciceSelected.getNameFile().toLowerCase().contains("p"))
-                                                {
-                                                    requestLogatome.sendHttpsRequest(params, "phrase");
+                                            // Dismiss sur l'UI le progressDialog
+                                            ((Activity)context).runOnUiThread(new Runnable() {
+                                                public void run() {
+                                                    dialog.dismiss();
                                                 }
-                                                else
+                                            });
+
+                                            ((Activity)context).runOnUiThread(new Runnable()
+                                            {
+                                                public void run()
                                                 {
-                                                    requestLogatome.sendHttpsRequest(params, "logatome");
+                                                    RequestServer requestLogatome = new RequestServer(context, callbackServer);
+
+                                                    if(exerciceSelected.getNameFile().toLowerCase().contains("p"))
+                                                    {
+                                                        requestLogatome.sendHttpsRequest(params, "phrase");
+                                                    }
+                                                    else
+                                                    {
+                                                        requestLogatome.sendHttpsRequest(params, "logatome");
+                                                    }
                                                 }
-                                            }
-                                        });
-                                    }
-                                }).start();
-                            }
-                        })
-                        .setCancelButton("Non", new cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(cn.pedant.SweetAlert.SweetAlertDialog sDialog) {
-                                sDialog.dismissWithAnimation();
-                            }
-                        })
-                        .show();
+                                            });
+                                        }
+                                    }).start();
+                                }
+                            })
+                            .setCancelButton("Non", new cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(cn.pedant.SweetAlert.SweetAlertDialog sDialog) {
+                                    sDialog.dismissWithAnimation();
+                                }
+                            })
+                            .show();
+                }
+                else
+                {
+                    new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Plus assez de place disponible")
+                            .setContentText("Il faut 100 Mo minimum disponible pour lancer un traitement. Veuillez en libérer pour pouvoir lancer un traitement.")
+                            .show();
+                }
+
             }
         });
     }

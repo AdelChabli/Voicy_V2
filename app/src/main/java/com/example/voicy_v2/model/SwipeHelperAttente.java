@@ -49,12 +49,31 @@ public class SwipeHelperAttente extends ItemTouchHelper.Callback
     }
 
     @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction)
+    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction)
     {
-        final int position = viewHolder.getAdapterPosition();
+        new cn.pedant.SweetAlert.SweetAlertDialog(context, cn.pedant.SweetAlert.SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Êtes-vous sûr ?")
+                .setContentText("Voulez-vous vraiment supprimer cet exercice ?")
+                .setConfirmText("Oui")
+                .setConfirmClickListener(new cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(cn.pedant.SweetAlert.SweetAlertDialog sDialog)
+                    {
+                        sDialog.dismissWithAnimation();
+                        final int position = viewHolder.getAdapterPosition();
 
-        adapter.deleteItem(position);
+                        adapter.deleteItem(position);
 
+                    }
+                })
+                .setCancelButton("Non", new cn.pedant.SweetAlert.SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(cn.pedant.SweetAlert.SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                        adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                    }
+                })
+                .show();
     }
 
 

@@ -20,6 +20,8 @@ import com.example.voicy_v2.model.LogVoicy;
 import com.example.voicy_v2.model.ServerRequest;
 import java.io.File;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import static com.example.voicy_v2.services.ServiceTraitementExercice.WORKING_ON;
 
 
@@ -61,23 +63,37 @@ public class MainActivity extends AppCompatActivity
     {
         btn_phoneme.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                LogVoicy.getInstance().createLogInfo("Clique sur le bouton exercice phonème détecté");
-                LogVoicy.getInstance().createLogInfo("Changement de page vers ExerciceActivity avec envoie du paramètre [type: logatome]");
-                Intent intent = new Intent(getApplicationContext(), ConfigurationExerciceActivity.class);
-                intent.putExtra("type", "logatome");
-                startActivityForResult(intent, 0);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                if(DirectoryManager.getInstance().getAvailableMo() > 100)
+                {
+                    LogVoicy.getInstance().createLogInfo("Clique sur le bouton exercice phonème détecté");
+                    LogVoicy.getInstance().createLogInfo("Changement de page vers ExerciceActivity avec envoie du paramètre [type: logatome]");
+                    Intent intent = new Intent(getApplicationContext(), ConfigurationExerciceActivity.class);
+                    intent.putExtra("type", "logatome");
+                    startActivityForResult(intent, 0);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                }
+                else
+                {
+                    popupNoSpace();
+                }
             }
         });
 
         btn_sentence.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                LogVoicy.getInstance().createLogInfo("Clique sur le bouton exercice phrase détecté");
-                LogVoicy.getInstance().createLogInfo("Changement de page vers PhonemeActivity avec envoie du paramètre [type: phrase]");
-                Intent intent = new Intent(getApplicationContext(), ConfigurationExerciceActivity.class);
-                intent.putExtra("type", "phrase");
-                startActivityForResult(intent, 1);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                if(DirectoryManager.getInstance().getAvailableMo() > 100)
+                {
+                    LogVoicy.getInstance().createLogInfo("Clique sur le bouton exercice phrase détecté");
+                    LogVoicy.getInstance().createLogInfo("Changement de page vers PhonemeActivity avec envoie du paramètre [type: phrase]");
+                    Intent intent = new Intent(getApplicationContext(), ConfigurationExerciceActivity.class);
+                    intent.putExtra("type", "phrase");
+                    startActivityForResult(intent, 1);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                }
+                else
+                {
+                    popupNoSpace();
+                }
             }
         });
 
@@ -226,5 +242,13 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setTitle(TOOLBAR_TITLE);
+    }
+
+    private void popupNoSpace()
+    {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Plus assez de place disponible")
+                .setContentText("Il faut 100 Mo minimum disponible pour lancer un traitement. Veuillez en libérer pour pouvoir lancer un traitement.")
+                .show();
     }
 }
